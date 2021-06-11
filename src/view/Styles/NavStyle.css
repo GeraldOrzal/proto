@@ -1,0 +1,14 @@
+#nav_cont{
+    border: solid black 2px;
+    padding: 2%;
+}
+#nav_cont > a {
+    margin-left: 2%;
+}
+
+
+#nav_cont img{
+    width: 20vw;
+    height: 5vh;
+    border: solid black 2px;
+}

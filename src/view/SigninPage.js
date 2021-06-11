@@ -4,7 +4,7 @@ import userService from '../service/UserService'
 import {Link, Redirect, useHistory} from 'react-router-dom'
 import {useAuth} from './AuthProvider'
 export default function SigninPage() {
-    const user = useAuth();
+    const {details,user} = useAuth();
     const history = useHistory();
     const [errorMessage, seterrorMessage] = useState()
     const [isLoading, setisLoading] = useState(false)
@@ -16,13 +16,13 @@ export default function SigninPage() {
         const {user,error} = await userService.supabase.auth.signIn(input);    
         setisLoading(false)
         if(error==null){
-            history.push("/user/"+user.email);
+            history.push("/user")
        }else{
            seterrorMessage(error?.message??null)
        }
     }
     return (
-        user?<Redirect to={"/user/"+user.email}/>:
+        user?<Redirect to={"/user"}/>:
         <>
         <form onSubmit={HandleSubmit}>
             <label>SIGNIN</label>

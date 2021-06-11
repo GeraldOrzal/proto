@@ -1,5 +1,7 @@
 import React,{useState,useEffect,useContext} from 'react'
+import { Redirect } from 'react-router';
 import userService from '../service/UserService'
+import CompletionPage from './CompletionPage';
 const UserContext = React.createContext();
 
 export function useAuth(){
@@ -7,12 +9,28 @@ export function useAuth(){
 }
 export default function AuthProvider({children}) {
     const [user, setuser] = useState()
+    const [details, setDetails] = useState()
     const [isLoading, setisLoading] = useState(true)
+    async function GetDetails(x){
+        
+        if(x){
+            let { data: UserDetails, error } = await userService.supabase.from('UserDetails').select('*').match({id:x.user.id})
+            if(error){
+                return;
+            }
+            
+            setDetails(UserDetails)
+               
+            
+        }
+        
+        
+    }
     useEffect(() => {
         const session = userService.supabase.auth.session()
         setuser(session?.user ?? null)
+        GetDetails(session)
         setisLoading(false)
-        console.log(session);
         const {data:listener} = userService.supabase.auth.onAuthStateChange(
             async (event, session) => {
                 setuser(session?.user ?? null)
@@ -20,13 +38,16 @@ export default function AuthProvider({children}) {
             }
         )
         
+        
         return ()=>{
             listener?.unsubscribe();
         }
     }, [])
-
+    const value ={
+        user,details
+    }
     return (
-        <UserContext.Provider value={user}>
+        <UserContext.Provider value={value}>
             {!isLoading&&children}
         </UserContext.Provider>
     )

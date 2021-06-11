@@ -6,7 +6,7 @@ import {useAuth} from './AuthProvider'
 export default function SignupPage() {
     const [isLoading, setisLoading] = useState(false)
     const [errorMessage, seterrorMessage] = useState()
-    const user = useAuth();
+    const {user} = useAuth();
     const history = useHistory();
     async function HandleSubmit(x){
         x.preventDefault();
@@ -17,13 +17,13 @@ export default function SignupPage() {
         
         setisLoading(false)
         if(error==null){
-             seterrorMessage("CHECK YOUR EMAIL TO CONTINUE SIGNUP");
+            history.push("/completion")            
         }else{
             seterrorMessage(error?.message??null)
         }
     }
     return (
-        user?<Redirect to={"/user/"+user.email}/>:
+        user?<Redirect to={"/user"}/>:
         <form onSubmit={HandleSubmit}>   
             <label>{errorMessage}</label> 
             <label>EMAIL:</label>
