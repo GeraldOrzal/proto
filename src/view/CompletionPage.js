@@ -1,10 +1,9 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState} from 'react'
 import './Styles/CompletionPage.css'
 import {useAuth} from './AuthProvider'
-import userService from '../service/UserService'
-import {Redirect, useHistory} from 'react-router-dom'
+import supabase from '../service/UserService'
+import {Redirect} from 'react-router-dom'
 export default function CompletionPage() {
-    const history = useHistory()
     const {user,details} = useAuth()
     const [isYes,setIsYes] = useState(true)
     const [errorMessage,setErrorMessage] = useState()
@@ -25,7 +24,7 @@ export default function CompletionPage() {
         }  
         
         
-        const { data, error } = await userService.supabase.from('UserDetails').insert([{ fullname: input.fullname, dateofbirth: input.dateofbirth,mothersmaidenname: input.mothersmaidenname ,driverlicensenumber: input.driverlicensenumber ,expirationdate: input.expirationdate,motorvehiclenumber:input.motorvehiclenumber,platenumber:input.platenumber,franchisenumber:input.franchisenumber,expirationdate_franchise:input.expirationdate_franchise,otherscooperative:input.otherscooperative ,id :user.id}])
+        const { error } = await supabase.from('userdetails').insert([{ fullname: input.fullname, dateofbirth: input.dateofbirth,mothersmaidenname: input.mothersmaidenname ,driverlicensenumber: input.driverlicensenumber ,expirationdate: input.expirationdate,motorvehiclenumber:input.motorvehiclenumber,platenumber:input.platenumber,franchisenumber:input.franchisenumber,franchiseexpirationdate:input.expirationdate_franchise,othercoop:input.otherscooperative ,id :user.id,userroleid:1}])
         if(error){
             setErrorMessage(error.message)
             return;

@@ -1,6 +1,6 @@
 import React ,{useState}from 'react'
 import {inputReq} from '../domain/formRequirements'
-import userService from '../service/UserService'
+import supabase from '../service/UserService'
 import {Redirect, useHistory} from 'react-router-dom'
 import {useAuth} from './AuthProvider'
 export default function SignupPage() {
@@ -13,11 +13,11 @@ export default function SignupPage() {
 
         const input = inputReq.createInput(x.target[0].value,x.target[1].value)
         setisLoading(true)
-        const {error} = await userService.supabase.auth.signUp(input);    
+        const {error} = await supabase.auth.signUp(input);    
         
         setisLoading(false)
         if(error==null){
-            history.push("/completion")            
+            seterrorMessage("CHECK EMAIL FOR CONFIRMATION")
         }else{
             seterrorMessage(error?.message??null)
         }

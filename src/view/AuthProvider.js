@@ -1,7 +1,5 @@
 import React,{useState,useEffect,useContext} from 'react'
-import { Redirect } from 'react-router';
-import userService from '../service/UserService'
-import CompletionPage from './CompletionPage';
+import supabase from '../service/UserService'
 const UserContext = React.createContext();
 
 export function useAuth(){
@@ -14,7 +12,7 @@ export default function AuthProvider({children}) {
     async function GetDetails(x){
         
         if(x){
-            let { data: UserDetails, error } = await userService.supabase.from('UserDetails').select('*').match({id:x.user.id})
+            let { data: UserDetails, error } = await supabase.from('userdetails').select('*').match({id:x.user.id})
             if(error){
                 return;
             }
@@ -27,11 +25,11 @@ export default function AuthProvider({children}) {
         
     }
     useEffect(() => {
-        const session = userService.supabase.auth.session()
+        const session = supabase.auth.session()
         setuser(session?.user ?? null)
         GetDetails(session)
         setisLoading(false)
-        const {data:listener} = userService.supabase.auth.onAuthStateChange(
+        const {data:listener} = supabase.auth.onAuthStateChange(
             async (event, session) => {
                 setuser(session?.user ?? null)
                 setisLoading(false)

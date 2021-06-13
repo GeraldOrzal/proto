@@ -1,10 +1,10 @@
-import React ,{useState,useEffect}from 'react'
+import React ,{useState}from 'react'
 import {inputReq} from '../domain/formRequirements'
-import userService from '../service/UserService'
+import supabase from '../service/UserService'
 import {Link, Redirect, useHistory} from 'react-router-dom'
 import {useAuth} from './AuthProvider'
 export default function SigninPage() {
-    const {details,user} = useAuth();
+    const {user} = useAuth();
     const history = useHistory();
     const [errorMessage, seterrorMessage] = useState()
     const [isLoading, setisLoading] = useState(false)
@@ -13,10 +13,12 @@ export default function SigninPage() {
         x.preventDefault();
         const input = inputReq.createInput(x.target[0].value,x.target[1].value)
         setisLoading(true)
-        const {user,error} = await userService.supabase.auth.signIn(input);    
+        const {error} = await supabase.auth.signIn(input);    
         setisLoading(false)
         if(error==null){
             history.push("/user")
+            window.location.reload();
+
        }else{
            seterrorMessage(error?.message??null)
        }
