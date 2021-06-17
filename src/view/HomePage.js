@@ -1,7 +1,7 @@
 
 import React,{useState,useEffect} from 'react'
 import {useHistory} from 'react-router-dom'
-import supabase from '../service/UserService'
+import supabase from '../service/Connection'
 import {useAuth} from './AuthProvider'
 import LoadingPage from './LoadingPage'
 export default function HomePage() {

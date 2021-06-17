@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import './Styles/CompletionPage.css'
 import {useAuth} from './AuthProvider'
-import supabase from '../service/UserService'
+import supabase from '../service/Connection'
 import {Redirect} from 'react-router-dom'
 export default function CompletionPage() {
     const {user,details} = useAuth()

@@ -1,6 +1,6 @@
 import React ,{useState}from 'react'
 import {inputReq} from '../domain/formRequirements'
-import supabase from '../service/UserService'
+import supabase from '../service/Connection'
 import {Link, Redirect, useHistory} from 'react-router-dom'
 import {useAuth} from './AuthProvider'
 export default function SigninPage() {
