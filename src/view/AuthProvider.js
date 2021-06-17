@@ -82,7 +82,12 @@ export default function AuthProvider({children}) {
         if(sections.length===0){
             return
         }
+        let listener = []
+        console.log(supabase.getSubscriptions())
         sections.map(({section_id,gclist_id})=>{
+            
+            const messages = supabase.from('messages:section_id=eq.'+section_id).on('INSERT', payload => {console.log('Change received!', payload)}).subscribe()
+            listener.push(messages)
             
             groupChatServices.GetAllMessages(section_id,(val)=>{
                 
@@ -99,7 +104,11 @@ export default function AuthProvider({children}) {
             
         })
         
-        
+        return ()=>{
+            listener?.map((x)=>{
+                x.unsubscribe()
+            })
+        }
         
     },[sections])
     useEffect(()=>{

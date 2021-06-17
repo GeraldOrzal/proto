@@ -54,7 +54,6 @@ export default function GroupChatPage() {
                 <label>SECTION NAME</label>
                 <input/>
                 <button>ADD SECTION</button>
-
             </form>
         </>
     )
@@ -87,11 +86,14 @@ export default function GroupChatPage() {
         if(list===undefined){
             return <></>
         }
-        return list?.map((x)=>(<div className="messages">  
+        return list?.map((x)=>(<div className="messages" style={{alignSelf:details[0]?.userdetails_id === x.userdetails_id?'flex-end':'flex-start'}}>  
         <label>{x.fullname}</label>
-        <div>
-            <label>{x.messsagebody}</label>
-            <img src={x.useravatar}/>
+        <div className="avat-cont">
+            {details[0]?.userdetails_id === x.userdetails_id?<><label className="mesBody">{x.messsagebody}</label>
+            <img className="useravatar" src={x.useravatar}/></>:<>
+            <img className="useravatar" src={x.useravatar}/>
+            <label className="mesBody">{x.messsagebody}</label>
+            </>}
         </div>
         <label className="dt">{x.datesent+":"+x.timesent}</label>
     </div>

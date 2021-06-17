@@ -13,7 +13,7 @@ class GroupChatServices {
         
     }
     async GetAllMessages(id,cb){
-        let { data: make_sense_message, error } = await supabase.from('make_sense_message').select('*').match({section_id:id})
+        let { data: make_sense_message, error } = await supabase.from('new_messages').select('*').match({section_id:id})
         if(error){
             return;
         }
