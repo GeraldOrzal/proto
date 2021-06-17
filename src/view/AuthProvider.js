@@ -11,6 +11,8 @@ export default function AuthProvider({children}) {
     const [details, setDetails] = useState()
     const [isLoading, setisLoading] = useState(true)
     const [joinGC,setJoinGC] = useState([])
+    const [sections,setSections] = useState([])
+    const [allMessages,setAllMessages] = useState({})
 
     async function GetDetails(x){
         
@@ -19,83 +21,9 @@ export default function AuthProvider({children}) {
             if(error){
                 return;
             }
-            groupChatServices.GetAllGroupChat(UserDetails[0].userdetails_id,(createdgc)=>{
-                const temp = []
-                createdgc.forEach(element => {
-                    const {groupname,datecreated,timecreated,fullname,gclist_id,groupavatar,code} = element;
-                    let newGc = {
-                        groupname,
-                        datecreated,
-                        timecreated,
-                        fullname,
-                        gclist_id,
-                        groupavatar,
-                        code,
-                        sectionsids:[],
-                        messages:[]
-                    }
-                 
-                    temp.push(newGc)
-                 
-                });
-                setJoinGC(temp)
-                joinGC.map((c)=>
-                    groupChatServices.GetSections(c.gclist_id,(h)=>{
-                        if(h.length!=0){
-                            setJoinGC(prevstate =>{
-                                return prevstate.map(obj=>{
-                                    if(obj.gclist_id===h[0]?.gclist_id){
-                                        return {
-                                            ...obj,
-                                            sectionsids:h
-                                        }
-                                    }else{
-                                        return obj;
-                                    }
-                                })
-                            }   
-                            )
-                        }
-                    }) 
-                )
-                /*
-                joinGC.map(
-                    (elem)=>{
-                        if(elem.sectionsids.length==0){
-                            return;
-                        }
-                        /*
-                        if(elem.length!=0){
-                            elem.sectionsids.map(
-                                
-                                (item)=>{
-                                    groupChatServices.GetAllMessages(item.section_id,(array)=>{
-                                        if(array.length!=0){
-                                            setJoinGC(prevstate =>{
-                                                return prevstate.map(obj=>{
-                                                    if(obj.gclist_id===h[0]?.gclist_id){
-                                                        return {
-                                                            ...obj,
-                                                            sectionsids:h
-                                                        }
-                                                    }else{
-                                                        return obj;
-                                                    }
-                                                })
-                                            }   
-                                            )
-                                        }               
-                                    })
-                                }
-                            )
-                        }
-                    }
-                )*/
-                
-                
-            });
-            setDetails(UserDetails)
             
+            setDetails(UserDetails)
+        
             
         }
         
@@ -105,21 +33,80 @@ export default function AuthProvider({children}) {
         const session = supabase.auth.session()
         setuser(session?.user ?? null)
         GetDetails(session)
-        setisLoading(false)
         const {data:listener} = supabase.auth.onAuthStateChange(
             async (event, session) => {
                 setuser(session?.user ?? null)
                 setisLoading(false)
             }
         )
-        
-        
+        setisLoading(false)
+       
         return ()=>{
             listener?.unsubscribe();
         }
     }, [])
+    useEffect(()=>{
+        if(details===undefined){
+            return;
+        }
+        
+        if(joinGC.length==0){
+            groupChatServices.SecView(details[0]?.userdetails_id,(val)=>{
+                setSections(val)
+            })
+            groupChatServices.GetAllGroupChat(details[0]?.userdetails_id,(createdgc)=>{    
+                let temp = []
+                createdgc.forEach(element => {
+                    const {groupname,datecreated,timecreated,fullname,gclist_id,groupavatar,code} = element;
+                    let newGc = {
+                        groupname,
+                        datecreated,
+                        timecreated,
+                        fullname,
+                        gclist_id,
+                        groupavatar,
+                        code
+                    }
+                 
+                temp.push(newGc)
+                
+                });
+                setJoinGC(temp)
+            });    
+        }
+        
+    },[details])
+    
+
+    useEffect(()=>{
+        if(sections.length===0){
+            return
+        }
+        sections.map(({section_id,gclist_id})=>{
+            
+            groupChatServices.GetAllMessages(section_id,(val)=>{
+                
+                if(val.length==0){
+                    return
+                }
+                setAllMessages(prevState=>{
+                    return {
+                        ...prevState,
+                        [section_id]:val
+                    }
+                })
+            })
+            
+        })
+        
+        
+        
+    },[sections])
+    useEffect(()=>{
+        console.log(allMessages)    
+    },[allMessages])
     const value ={
-        user,details,joinGC
+        user,details,joinGC,sections,allMessages
     }
     return (
         <UserContext.Provider value={value}>

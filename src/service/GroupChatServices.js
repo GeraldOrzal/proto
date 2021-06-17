@@ -12,8 +12,8 @@ class GroupChatServices {
         storage(messages)
         
     }
-    async GetAllMessages(section_id,cb){
-        let { data: make_sense_message, error } = await supabase.from('make_sense_message').select('*').match({section_id:section_id})
+    async GetAllMessages(id,cb){
+        let { data: make_sense_message, error } = await supabase.from('make_sense_message').select('*').match({section_id:id})
         if(error){
             return;
         }
@@ -38,6 +38,7 @@ class GroupChatServices {
         const {data} = supabase.storage.from(bucket).getPublicUrl(folder+"/"+name);
         return data.publicURL;
     }
+    
     async GetDefaultAvatars(bucket,folder,storage){
         const {data,error} = await supabase.storage.from(bucket).list(folder)
         
@@ -58,8 +59,8 @@ class GroupChatServices {
 
         storage(temp)
     }
-    async GetSections(id,cb){
-        let { data: sections, error } = await supabase.from('sections').select('section_id,gclist_id').match({gclist_id:id})
+   async GetSections(id,cb){
+        let { data: sections, error } = await supabase.from('sections').select('*').match({gclist_id:id})
         if(error){
             return;
         }
@@ -75,6 +76,13 @@ class GroupChatServices {
         }
         
         storage(createdgc)
+    }
+    async SecView(id,cb){
+        let { data: get_sections, error } = await supabase.from('get_sections').select('*').match({userdetails_id:id})
+        if(error){
+            return;
+        }
+        cb(get_sections)
     }
 }
 const groupChatServices = new GroupChatServices("userlist","gclist")

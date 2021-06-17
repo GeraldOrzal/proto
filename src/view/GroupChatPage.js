@@ -8,14 +8,16 @@ import upload from './Icons/upload.png'
 import closeBtn from './Icons/close.png'
 import {useAuth} from './AuthProvider.js'
 import { render } from 'react-dom'
+import groupChatServices from '../service/GroupChatServices'
 
 
 
 export default function GroupChatPage() {    
     const [isDark,setIsDark] = useState(true)
     const [isGC,setisGC] = useState(true)
-    const {details,joinGC} = useAuth()
+    const {details,joinGC,sections,allMessages} = useAuth()
     const [currentGC,setCurrentGC] = useState()
+    const [messagesToRender,setmessagesToRender] = useState()
     function HandleOpen(comp){
         document.getElementById('darkbg').style.display = "block"
         document.getElementById('popup-cont').style.display = "flex"
@@ -28,15 +30,23 @@ export default function GroupChatPage() {
                 break;
         }
     }
-    useEffect(()=>{
-        console.log(joinGC)
-    },[])
+    
+    function SetCurrentSection(x){
+        
+        setmessagesToRender(allMessages[x])
+        
+        
+    }
+    
     function HandleAvatarClick(x){
         setCurrentGC(x)
     }
     function HandleClose(){
         document.getElementById('darkbg').style.display = "none"
         document.getElementById('popup-cont').style.display = "none"
+    }
+    function HandleSectionMessage(x){
+
     }
     const AddSectComp = () =>(
         <>
@@ -70,6 +80,27 @@ export default function GroupChatPage() {
     const renderGCList = (list) =>(
         list?.map((x)=><img src={x.groupavatar} onClick={()=>{HandleAvatarClick(x)}}/>)
     )
+    const renderSection = (list) =>(
+        list?.map((f)=>currentGC?.gclist_id==f.gclist_id?<label keys={f.section_id} onClick={()=>{SetCurrentSection(f.section_id)}}>{f.sectionname}</label>:<></>)
+    )
+    const renderMessages = (list) =>{
+        if(list===undefined){
+            return <></>
+        }
+        return list?.map((x)=>(<div className="messages">  
+        <label>{x.fullname}</label>
+        <div>
+            <label>{x.messsagebody}</label>
+            <img src={x.useravatar}/>
+        </div>
+        <label className="dt">{x.datesent+":"+x.timesent}</label>
+    </div>
+    )
+            
+        )
+        
+    }
+    
     
     return (
         <div id="gcpage-cont">
@@ -79,11 +110,12 @@ export default function GroupChatPage() {
             </div>
             <div id="sectionlist-cont">
                 {details && details[0]?.userroleid===3?<><label>Section</label><label>ATTENDANCE</label></>:<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>}
-                <label>#Section</label>
+                {renderSection(sections)}
+
             </div>
             <div id="chatcont">
                 <div id="messages-area">
-                    
+                    {renderMessages(messagesToRender)}                    
                 </div>
                 <div id="send-cont">
                     <textarea/>
