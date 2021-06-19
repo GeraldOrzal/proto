@@ -127,6 +127,14 @@ form{
 #create{
     display: flex;
     flex-direction: column;
+    
+}
+#create img{
+    align-self: center;
+    border: solid black 2px;
+    height: 20vh;
+    border-radius: 50%;
+    width: 10vw;
 }
 #section{
     display: flex;
@@ -149,4 +157,20 @@ form{
     width: 2vw;
     height: 4vh;
     border-radius: 50%;
+}
+#gcdefcont{
+    display:grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    overflow-y: scroll;
+    padding: 2% 0% 2% 10%;
+}
+#gcdefcont > img{
+    height: 10vh;
+}
+#upIco{
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    width: 25%;
+    height: 50vh;
 }

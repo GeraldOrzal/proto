@@ -1,30 +1,43 @@
 import supabase from './Connection'
 class GroupChatServices {
-    constructor(usertable,groupchattable){
-        this.usertable = usertable;
-        this.groupchattable = groupchattable;
-    }
     async GetMessage(id,storage){
-        let { data: messages, error } = await supabase.from('usablemessage').select('*').match({messages_id:id})
+        let { data: messages, error } = await supabase.from('new_messages').select('*').match({messages_id:id})
         if(error){
             return
         }
         storage(messages)
         
     }
+    async UploadPhoto(bucket,folder,file,cb){
+        const {data,error} = await supabase.storage.from(bucket).upload(folder,file)
+        if(error){
+            return 
+        }
+        cb(data)
+    }
     async GetAllMessages(id,cb){
-        let { data: make_sense_message, error } = await supabase.from('new_messages').select('*').match({section_id:id})
+        let { data: make_sense_message, error } = await supabase.from('new_messages').select('*').order('messages_id',{ascending:true}).match({section_id:id}).limit(100)
+        
         if(error){
             return;
         }
+        
         cb(make_sense_message)
+        
     }
-    async InsertGC(storage,value){
-        const { data, error } = await supabase.from('gclist').insert([value])
+    async InsertGC(value){
+        const { error } = await supabase.from('gclist').insert([value])
+        console.log(error)
         if(error){
             return
         }
-        storage(data)
+        
+    }
+    async InsertMessage(value){
+        const {error } = await supabase.from('messages').insert([value])
+        if(error){
+            return
+        }
     }
     async GetNewlyCreatedGC(id,storage){
         let { data: createdgc, error } = await supabase.from('createdgc').select('*').match({gclist_id:id})
@@ -64,7 +77,6 @@ class GroupChatServices {
         if(error){
             return;
         }
-        
         cb(sections)
         
         
@@ -77,15 +89,29 @@ class GroupChatServices {
         
         storage(createdgc)
     }
+    async InsertSection(value,cb){
+        let {error } = await supabase.from('sections').insert([value]);
+        if(error){
+            return;
+        }
+        
+    }
+    async GetCurrentGC(id,cb){
+        let { data: createdgc, error } = await supabase.from('getallgc').select('*').match({gclist_id:id})
+        if(error){
+            return
+        }
+        cb(createdgc)
+    }
     async SecView(id,cb){
-        let { data: get_sections, error } = await supabase.from('get_sections').select('*').match({userdetails_id:id})
+        let { data: get_sections, error } = await supabase.from('sections').select('*').match({userdetails_id:id})
         if(error){
             return;
         }
         cb(get_sections)
     }
 }
-const groupChatServices = new GroupChatServices("userlist","gclist")
+const groupChatServices = new GroupChatServices()
 export default groupChatServices;
 
 
