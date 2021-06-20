@@ -21,6 +21,7 @@ export default function AuthProvider({children}) {
         if(x){
             let { data: UserDetails, error } = await supabase.from('userdetails').select('*').match({id:x.user.id})
             if(error){
+                console.log(error)
                 return;
             }
             
