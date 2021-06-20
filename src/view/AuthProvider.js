@@ -81,6 +81,7 @@ export default function AuthProvider({children}) {
     }
     useEffect(()=>{
         console.log(details)
+        console.log("sadasdad")
         if(details===undefined){
             return
         }
