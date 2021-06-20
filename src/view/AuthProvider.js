@@ -87,6 +87,10 @@ export default function AuthProvider({children}) {
         if(details===undefined){
             return
         }
+        if(details?.length===0){
+            setisLoading(false)
+            return
+        }
         if(Object.entries(joinGC).length===0){   
             InitGC()
         }
