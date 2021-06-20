@@ -43,7 +43,7 @@ export default function AuthProvider({children}) {
                 setisLoading(false)
             }
         )
-        
+        console.log(session)
        
         return ()=>{
             listener?.unsubscribe();
@@ -83,6 +83,7 @@ export default function AuthProvider({children}) {
         if(details===undefined){
             return
         }
+        console.log(details)
         let subgc = supabase.from('userlist:userdetails_id=eq.'+details[0]?.userdetails_id).on('INSERT', payload => {
             groupChatServices.GetCurrentGC(payload.new.gclist_id,(v)=>{
                 let {groupname,datecreated,fullname,timecreated,gclist_id,code,groupavatar} = v[0];
@@ -117,6 +118,8 @@ export default function AuthProvider({children}) {
     
    
     useEffect(()=>{
+        console.log(joinGC)
+        console.log(sections)
         if(joinGC === undefined ||details === undefined || Object.entries(details).length === 0||Object.entries(joinGC).length === 0){
             return;
         }
@@ -206,7 +209,7 @@ export default function AuthProvider({children}) {
     },[joinGC,details])
     useEffect(()=>{
         
-        
+        console.log(sections)
         let listener = []
         
         
