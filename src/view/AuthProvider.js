@@ -44,6 +44,9 @@ export default function AuthProvider({children}) {
                 setisLoading(false)
             }
         )
+        if(session===null){    
+            setisLoading(false)
+        }
         console.log(session)
        
         return ()=>{
