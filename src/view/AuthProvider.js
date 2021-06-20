@@ -80,6 +80,7 @@ export default function AuthProvider({children}) {
         
     }
     useEffect(()=>{
+        console.log(details)
         if(details===undefined){
             return
         }
