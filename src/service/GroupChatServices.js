@@ -110,6 +110,20 @@ class GroupChatServices {
         }
         cb(get_sections)
     }
+    async GetGCViaCode(code,cb){
+        let { data: createdgc, error } = await supabase.from('getallgc').select('*').match({code:code})
+        if(error){
+            return
+        }
+        cb(createdgc)
+    }
+    async InsertUser(value){
+        let { error } = await supabase.from('userlist').insert([value])
+        if(error){
+            return
+        }
+
+    }
 }
 const groupChatServices = new GroupChatServices()
 export default groupChatServices;

@@ -50,9 +50,14 @@ export default function GroupChatPage() {
         }))
     },[])
     useEffect(()=>{
+        if(Object.entries(joinGC).length===0){
+            setIsLoading(false)
+            return;
+        }
         if(Object.entries(joinGC).length!==0&&Object.entries(sections).length!==0&&!isLoading){
             setIsLoading(false)
         }
+        
     },[joinGC,sections,isLoading])
     useEffect(()=>{
         if(isGCLoading){
@@ -131,6 +136,22 @@ export default function GroupChatPage() {
             gcRefStore.current.value = x
         },1000)
     }
+    function JoinGC(x){
+        x.preventDefault()
+        groupChatServices.GetGCViaCode(x.target[0].value,(s)=>{
+            if(s.length===0){
+                console.log("THERE IS NO SUCH GC")
+                return
+            }
+            let {gclist_id}=s[0];
+            let id = details[0]?.userdetails_id
+            let user = {
+                gclist_id,
+                userdetails_id:id
+            }
+            groupChatServices.InsertUser(user)
+        })
+    }
     function Upload(){
         let input = document.createElement('input');
         input.type = 'file';
@@ -160,23 +181,22 @@ export default function GroupChatPage() {
             <input value={currentCode} readOnly={true}/>
             <button>CREATE</button>
         </form>
-        <form id="join">  
+        <form id="join" onSubmit={JoinGC}>  
             <label>CODE:</label>
             <input/>
             <button>JOIN</button>
         </form>
         </>
     )
-    const renderGCList = (list) =>{
+    const renderGCList = (list) =>{ 
         let keys = Object.keys(list)
         return keys.map((x)=>
         <img src={list[x].groupavatar} onClick={()=>{HandleAvatarClick(list[x])}}/>
         )
     }
     const renderSection = (list) =>{
-        if(list==="NO SECTIONS"){
-            return (<></>)
-        }
+        
+        
         return list?.map((f)=>{
             return <label keys={f.section_id} onClick={()=>{SetCurrentSection(f.section_id)}}>{f.sectionname}</label>
         })
@@ -189,9 +209,10 @@ export default function GroupChatPage() {
             <img className="useravatar" src={x.useravatar}/></>:<>
             <img className="useravatar" src={x.useravatar}/>
             <label className="mesBody">{x.messsagebody}</label>
+            
             </>}
         </div>
-        <label className="dt">{x.datesent+":"+x.timesent}</label>
+        <label className="dt" hidden={true}>{x.datesent+":"+x.timesent}</label>
     </div>
         )   
     )
