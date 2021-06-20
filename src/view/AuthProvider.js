@@ -25,7 +25,7 @@ export default function AuthProvider({children}) {
             }
             
             setDetails(UserDetails)
-        
+            console.log(UserDetails)
             
         }
         
