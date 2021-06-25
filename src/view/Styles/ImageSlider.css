@@ -1,1 +1,28 @@
 
+#imgCont{
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    column-gap: 2vw;
+    transform-origin: center;
+    animation-name: slides;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    
+}
+@keyframes slides{
+    0%{
+        opacity: 100%;
+        transform: translateX(0%);
+    }
+    100%{
+        transform: translateX(100%);
+        opacity: 0%;
+    }
+}
+#slider_cont{
+    display: flex;
+    flex-direction: column;
+    border: solid black 2px;
+    width: 50%;
+}
