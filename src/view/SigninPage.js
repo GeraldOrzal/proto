@@ -3,6 +3,10 @@ import {inputReq} from '../domain/formRequirements'
 import supabase from '../service/Connection'
 import {Link, Redirect, useHistory} from 'react-router-dom'
 import {useAuth} from './AuthProvider'
+import {mobile,desktop} from './Components/_responsive'
+import Responsive from './Components/Responsive'
+import './Styles/SigninPageStyle.css'
+import userIcon from './Icons/user.svg'
 export default function SigninPage() {
     const {user} = useAuth();
     const history = useHistory();
@@ -26,16 +30,17 @@ export default function SigninPage() {
     return (
         user?<Redirect to={"/user"}/>:
         <>
-        <form onSubmit={HandleSubmit}>
-            <label>SIGNIN</label>
-            <label>{errorMessage}</label>
-            <label>Email:</label>
-            <input type="email"/>
-            <label>Password:</label>
-            <input type="password"/>
-            <button disabled={isLoading}>Signin</button>
-        </form>
-        <Link to="/signup">DONT HAVE AN ACCOUNT YET? CLICK ME</Link>
+            <form onSubmit={HandleSubmit} className="_form form-desk">
+                <label>SIGNIN</label>
+                <label>{errorMessage}</label>
+                <label>Email:</label>
+                <input type="email"/>
+                <label>Password:</label>
+                <input type="password"/>
+                <button disabled={isLoading}>Signin</button>
+            </form>
+            <Link to="/signup">DONT HAVE AN ACCOUNT YET? CLICK ME</Link>
+        
         </>
     )
 }

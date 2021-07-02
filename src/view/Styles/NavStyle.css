@@ -12,3 +12,38 @@
     height: 5vh;
     border: solid black 2px;
 }
+
+
+
+#burger{
+    z-index: 2;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    flex-direction: column;
+    width: 10%;
+    
+}
+#dark{
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    top:0%;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 0;
+}
+#burger > span{
+    position: relative;
+    width: 50%;
+    border: solid black 2px;
+    border-radius: 5px;
+    margin: 3px 0px 0px 5px;
+}
+
+#nav_cont-mob a img{
+    width: 10vw;
+    margin-left: 7vw;
+    height: 5vh;
+}
+

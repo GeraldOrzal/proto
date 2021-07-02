@@ -15,7 +15,8 @@ export default function AuthProvider({children}) {
     const [allMessages,setAllMessages] = useState({})
     const [gcAvatar,setGcAvatar] = useState()
     const [userAvatar,setUserAvatar] = useState()
-
+    const [currentMobSection,setCurrentMobSection] = useState()
+    const [burgerClick, setburgerClick] = useState(false)
     async function GetDetails(x){
         
         if(x){
@@ -267,7 +268,7 @@ export default function AuthProvider({children}) {
         }
     },[isLoading])
     const value ={
-        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar
+        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar,setCurrentMobSection,currentMobSection,burgerClick,setburgerClick
     }
     return (
         <UserContext.Provider value={value}>

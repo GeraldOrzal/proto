@@ -10,17 +10,18 @@ export default function ImageSlider(props) {
             }
         ):<></>
     }
+    
+    
     function HandleLeftClick(){
         setcurrentImage(currentImage-1)
     }
     return (
         <div id="slider_cont">
-            
+            <button>{"<"}</button>
             <div id="imgCont">
-                <button>{"<"}</button>
                     {renderImages()}
-                <button>{">"}</button>
             </div>       
+            <button>{">"}</button>
             <div id="cirCont">
                 <span></span>
                 <span></span>

@@ -35,7 +35,7 @@
     margin-top: 5%;
 }
 #chatcont{
-    border-right: solid black 2px;
+    
     width: 50vw;
     display: flex;
     flex-direction: column;
@@ -55,21 +55,21 @@
     display: flex;
     flex-direction: row;
     width: inherit;
-    height: inherit;
+    
     column-gap: 2vw;
     align-items: center;
 }
-#send-cont textarea{
-    width: 75%;
-    height: 20vh;
-    margin-top: 3%;
-    border: solid black 2px;
-    resize: none;
-
-}
-#send-cont img{
-    border: solid black 2px;
+#mob-nav-chat{
+    border-bottom: solid black 2px;
     height: 8vh;
+    width: inherit;
+}
+#send-cont textarea{
+    width: 80vw;
+}
+  
+#send-cont img{
+    height: 6vh;
     width: 5vw;
 }
 #opt-cont{
@@ -172,4 +172,51 @@ form{
     left: 50%;
     width: 25%;
     height: 50vh;
+}
+#gcpage-cont-mob {
+    display: flex;
+    flex-direction: row;
+
+}
+#cont{
+    top:0%;
+    left:-100%;
+    height: 100vh;
+    position:absolute;
+    display: flex;
+    flex-direction: row;
+}
+#sectionlist-cont-mob{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 0;
+    height: inherit;
+    width: 50vw;
+    border-right: solid black 2px;
+}
+#gclist-cont-mob{
+    
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    z-index: 0;
+    background-color: white;
+    height: inherit;
+    align-items: center;
+    padding-top: 10%;
+    border-right: solid black 2px;
+    
+}
+
+#gclist-cont-mob > img{
+    border: solid black 2px;
+    height: 5vh;
+    width: 7vw;
+    border-radius: 50%;
+}
+#addgcbtn-mob{
+    border-style: none;
+    margin-top: 40%;
 }
