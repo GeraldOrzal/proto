@@ -8,7 +8,7 @@ import Responsive from './Components/Responsive'
 import './Styles/SigninPageStyle.css'
 import userIcon from './Icons/user.svg'
 export default function SigninPage() {
-    const {user} = useAuth();
+    const {user,details} = useAuth();
     const history = useHistory();
     const [errorMessage, seterrorMessage] = useState()
     const [isLoading, setisLoading] = useState(false)
@@ -21,11 +21,10 @@ export default function SigninPage() {
         setisLoading(false)
         if(error==null){
             history.push("/user")
-            window.location.reload();
-
-       }else{
+            window.location.reload()
+        }else{
            seterrorMessage(error?.message??null)
-       }
+        }
     }
     return (
         user?<Redirect to={"/user"}/>:

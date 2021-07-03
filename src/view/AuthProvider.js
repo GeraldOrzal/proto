@@ -15,10 +15,9 @@ export default function AuthProvider({children}) {
     const [allMessages,setAllMessages] = useState({})
     const [gcAvatar,setGcAvatar] = useState()
     const [userAvatar,setUserAvatar] = useState()
-    const [currentMobSection,setCurrentMobSection] = useState()
+    const [currentSection,setCurrentSection] = useState()
     const [burgerClick, setburgerClick] = useState(false)
     async function GetDetails(x){
-        
         if(x){
             let { data: UserDetails, error } = await supabase.from('userdetails').select('*').match({id:x.user.id})
             if(error){
@@ -268,7 +267,7 @@ export default function AuthProvider({children}) {
         }
     },[isLoading])
     const value ={
-        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar,setCurrentMobSection,currentMobSection,burgerClick,setburgerClick
+        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick
     }
     return (
         <UserContext.Provider value={value}>

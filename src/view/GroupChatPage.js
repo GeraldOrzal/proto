@@ -17,9 +17,8 @@ import groupChatServices from '../service/GroupChatServices'
 export default function GroupChatPage() {    
     const {isMobile} = useResponsive()
     const [isDark,setIsDark] = useState(true)
-    const {details,joinGC,sections,allMessages,isLoading,gcAvatar,setCurrentMobSection,currentMobSection,burgerClick,setburgerClick} = useAuth()
+    const {details,joinGC,sections,allMessages,isLoading,gcAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick} = useAuth()
     const [currentGC,setCurrentGC] = useState()
-    const [currentSec,setCurrentSection] = useState()
     const [isGCLoading,setIsLoading] = useState(true)
     const [compPop,setCompPop] = useState("GC")
     const gcRef = useRef()
@@ -41,7 +40,7 @@ export default function GroupChatPage() {
                 return AddGroupAvatars()
             default:
                 
-                return Addgcomp()
+                return 
         }
     }
 
@@ -93,35 +92,24 @@ export default function GroupChatPage() {
         groupChatServices.InsertSection(value);
     }   
     function HandleSend(){
-        if(!isMobile){
-            if(currentSec===undefined){
-                return
-            }
-            const value = {
-                userdetails_id: details[0]?.userdetails_id,
-                messsagebody: textArea.current.value,
-                section_id: currentSec
-            }
-            groupChatServices.InsertMessage(value)
-        }else{
-            if(currentMobSection===undefined){
-                return
-            }
-            const value = {
-                userdetails_id: details[0]?.userdetails_id,
-                messsagebody: textArea.current.value,
-                section_id: currentMobSection
-            }
-            groupChatServices.InsertMessage(value)
+        
+        if(currentSection===undefined){
+            return
         }
+        const value = {
+            userdetails_id: details[0]?.userdetails_id,
+            messsagebody: textArea.current.value,
+            section_id: currentSection
+        }
+        groupChatServices.InsertMessage(value)
+    
         
         
     }
     function SetCurrentSection(x){   
         if(isMobile){
             setburgerClick(!burgerClick)
-            setCurrentMobSection(x)
-            return;
+            
         }
         setCurrentSection(x)
     }
@@ -130,6 +118,11 @@ export default function GroupChatPage() {
         setCurrentGC(x)
     }
     function HandleClose(){
+        
+        if(isMobile){
+            document.getElementById('popup-cont').style.display = "none"
+            return;
+        }
         document.getElementById('darkbg').style.display = "none"
         document.getElementById('popup-cont').style.display = "none"
     }
@@ -190,18 +183,22 @@ export default function GroupChatPage() {
         };
         input.click();
     }
+    const inputStyleMob={
+        width: "20vw",
+        alignSelf:"center"
+    }
     const Addgcomp = ()=>(
         <>
-        <form id="create" onSubmit={CreateGroupChat}>  
+        <form id="create" onSubmit={CreateGroupChat} style={isMobile?{alignItems:"center"}:{}}>  
             <img ref={gcRef}/>
-            <input ref={gcRefStore} hidden={true}/>
+            <input ref={gcRefStore} hidden={true} />
             <button onClick={()=>{
                 setCompPop("GCAVAT")
             }}>SELECT</button>
             <label>Groupname:</label>
-            <input/>
+            <input style={isMobile?inputStyleMob:{}}/>
             <label>SHAREABLE CODE</label>
-            <input value={currentCode} readOnly={true}/>
+            <input value={currentCode} readOnly={true} style={isMobile?inputStyleMob:{}}/>
             <button>CREATE</button>
         </form>
         <form id="join" onSubmit={JoinGC}>  
@@ -263,7 +260,15 @@ export default function GroupChatPage() {
         )
     }
    
-    
+    const mobStyle={
+        position:"absolute",
+        width: "100%",
+        height: "100%",
+        backgroundColor: "white",
+        display: "none",
+        flexDirection: "column",
+        zIndex:"2",
+    }
         return (
         !isGCLoading?<>
         <div id="gcpage-cont">
@@ -278,7 +283,7 @@ export default function GroupChatPage() {
         </div>
         </>:<div id="cont" style={burgerClick?{left: "0%"}:{left: "-100%"}}>
         <div id="gclist-cont-mob" >
-            <img src={btnLog} id="addgcbtn"/>
+            <img src={btnLog} id="addgcbtn" onClick={()=>{HandleOpen("GC")}}/>
             {renderGCList(joinGC)}
         </div>
         <div id="sectionlist-cont-mob">
@@ -290,28 +295,27 @@ export default function GroupChatPage() {
         <div id="chatcont" style={{height:"100vh",width:isMobile?"100vw":"50vw",borderRight:isMobile?"none":"solid black 2px"}}>
             {isMobile?<div id="mob-nav-chat"><img/></div>:<></>}
             <div id="messages-area" style={isMobile?{height:"100vh"}:{height:"70%"}}>
-                {isMobile?renderMessages(allMessages[currentMobSection]):renderMessages(allMessages[currentSec])}
+                {renderMessages(allMessages[currentSection])}
             </div>
-            <div id="send-cont" style={{height: isMobile?"6vh":"inherit"}}>
+            <div id="send-cont" style={{height: isMobile?"6vh":"20%"}}>
                 
                 <textarea ref={textArea} style={{height: isMobile?"2vh":"inherit"}}/>
                 
                 <img src={sendIcon} onClick={()=>{HandleSend()}}/>
             </div>
         </div>
-        {!isMobile? <><div id="opt-cont">
+        <div id="opt-cont">
                 <img src={currentGC?.groupavatar}/>
                 <label>{currentGC?.groupname}</label>
                 <label>SHARED FILES</label>
             </div>
-            <div id="darkbg">
+            <div id="darkbg" style={{display:isMobile&&burgerClick?"block":"none",zIndex:isMobile&&burgerClick?"-1":"",height:isMobile?"100vh":""}}>
             </div>
-            <div id="popup-cont">
+            <div id="popup-cont" style={isMobile?mobStyle:{}}>
                 <img src={closeBtn} onClick={()=>{HandleClose()}}/>
                 {RenderHandler()}
-            </div></>
-        :<>
-</>}
+            </div>
+        
         </div>
         
         </>:<LoadingPage/>

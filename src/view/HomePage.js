@@ -8,14 +8,17 @@ export default function HomePage() {
     const [errorMessage, seterrorMessage] = useState()
     const history = useHistory()
     const {details} = useAuth();
+    const [isLoading,setIsLoading] = useState(true)
     useEffect(() => {
         if(details===undefined){
             return;
         }
         if(details?.length===0){
-            console.log(details)
             history.push("/completion")    
+            console.log("no details")
+            return;
         }
+        setIsLoading(false)
         
     }, [details])
     async function HandleLogout(x){
@@ -30,13 +33,15 @@ export default function HomePage() {
     }
 
     return(
-        details?.length!==0?
-           <div>
-                <label>{errorMessage}</label>
-                HOMEPAGE
-                <button onClick={HandleLogout}>SIGNOUT</button>
-            </div>:
-        <LoadingPage/>
+        isLoading?
+        <LoadingPage/>:
+        <div>
+            <label>{errorMessage}</label>
+            HOMEPAGE
+            <button onClick={HandleLogout}>SIGNOUT</button>
+        </div>
+        
+
         
     ) 
         

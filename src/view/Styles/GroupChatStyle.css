@@ -65,7 +65,7 @@
     width: inherit;
 }
 #send-cont textarea{
-    width: 80vw;
+    width: 70vw;
 }
   
 #send-cont img{
@@ -203,7 +203,7 @@ form{
     width: 20%;
     z-index: 0;
     background-color: white;
-    height: inherit;
+    height: 90vh;
     align-items: center;
     padding-top: 10%;
     border-right: solid black 2px;
