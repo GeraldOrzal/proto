@@ -3,6 +3,8 @@ import {inputReq} from '../domain/formRequirements'
 import supabase from '../service/Connection'
 import {Redirect, useHistory} from 'react-router-dom'
 import {useAuth} from './AuthProvider'
+import './Styles/BaseStyle.css'
+import './Styles/SigninPageStyle.css'
 export default function SignupPage() {
     const [isLoading, setisLoading] = useState(false)
     const [errorMessage, seterrorMessage] = useState()
@@ -24,13 +26,15 @@ export default function SignupPage() {
     }
     return (
         user?<Redirect to={"/user"}/>:
-        <form onSubmit={HandleSubmit}>   
-            <label>{errorMessage}</label> 
-            <label>EMAIL:</label>
-            <input type="email"/>
-            <label>PASSWORD:</label>
-            <input type="password"/>
-            <button disabled={isLoading}>SIGNUP</button>
-        </form>
+        <div className="base">
+            <form onSubmit={HandleSubmit} className="desk-form">   
+                <label>{errorMessage}</label> 
+                <label>EMAIL:</label>
+                <input type="email"/>
+                <label>PASSWORD:</label>
+                <input type="password"/>
+                <button disabled={isLoading}>SIGNUP</button>
+            </form>
+        </div>
     )
 }

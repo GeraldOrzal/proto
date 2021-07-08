@@ -28,3 +28,35 @@
     padding: 2%;
     margin-top: 5%;
 }
+.desk-form{
+    display: flex;
+    flex-direction: column;
+    height: 40vh;
+    position: absolute;
+    width: 30vw;
+    background-color: #E4E5E8;
+    padding: 2%;
+    transform: translate(100%,20%);
+}
+.desk-form label{
+
+}
+.desk-form input{
+    margin-top: 2vh;
+    height: 5vh;
+    background-color: #53565A;
+    border-radius: 5px;
+    border: none;
+    padding-left: 2%;
+    color: #E4E5E8;
+}
+
+.desk-form button{
+    height: 5vh;
+    background-color: transparent;
+    border: solid black 2px;
+    margin-top: 2vh;
+}
+.signinpage a{
+    text-decoration: none;
+}

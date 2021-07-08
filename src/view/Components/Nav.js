@@ -57,7 +57,8 @@ export default function Nav(props) {
             <div id="nav_cont">
                 <img/>
                 {user?renderLink(list.auth):renderLink(list.notAuth)}
-            </div>:<div style={user?authNavStyle:defNavStyle} id="nav_cont-mob">
+            </div>:
+            <div style={user?authNavStyle:defNavStyle} id="nav_cont-mob">
                             <div id="burger" onClick={()=>{HandleBurgerClick()}}>
                                 <span></span>
                                 <span></span>

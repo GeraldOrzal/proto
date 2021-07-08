@@ -1,4 +1,5 @@
 import React from 'react'
+import './Styles/BaseStyle.css'
 const renderTable = ()=>(
     <table>
     <tr>
@@ -44,14 +45,7 @@ const renderTable = ()=>(
 )
 export default function Dashboard() {
     return (
-        <div>
-            <h1>DASHBOARD:</h1>
-            <div>
-                <h4>NEW APPLICANTS:</h4>
-                <h5>2</h5>
-                <button>CHECK</button>
-            </div>
-            
+        <div className="base">
         </div>
     )
 }

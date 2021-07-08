@@ -4,12 +4,14 @@ import supabase from '../service/Connection'
 import {Link, Redirect, useHistory} from 'react-router-dom'
 import {useAuth} from './AuthProvider'
 import {mobile,desktop} from './Components/_responsive'
-import Responsive from './Components/Responsive'
+import Responsive,{useResponsive} from './Components/Responsive'
 import './Styles/SigninPageStyle.css'
+import './Styles/BaseStyle.css'
 import userIcon from './Icons/user.svg'
 export default function SigninPage() {
     const {user,details} = useAuth();
     const history = useHistory();
+    const {isMobile} = useResponsive()
     const [errorMessage, seterrorMessage] = useState()
     const [isLoading, setisLoading] = useState(false)
 
@@ -28,8 +30,8 @@ export default function SigninPage() {
     }
     return (
         user?<Redirect to={"/user"}/>:
-        <>
-            <form onSubmit={HandleSubmit} className="_form form-desk">
+        <div className="base signinpage">
+            <form onSubmit={HandleSubmit} className={isMobile?"_form":"desk-form"}>
                 <label>SIGNIN</label>
                 <label>{errorMessage}</label>
                 <label>Email:</label>
@@ -37,9 +39,9 @@ export default function SigninPage() {
                 <label>Password:</label>
                 <input type="password"/>
                 <button disabled={isLoading}>Signin</button>
+                <Link to="/signup">DONT HAVE AN ACCOUNT YET? CLICK ME</Link>
             </form>
-            <Link to="/signup">DONT HAVE AN ACCOUNT YET? CLICK ME</Link>
-        
-        </>
+            
+        </div>
     )
 }

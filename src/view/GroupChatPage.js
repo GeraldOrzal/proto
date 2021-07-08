@@ -8,9 +8,9 @@ import upload from './Icons/upload.png'
 import closeBtn from './Icons/close.png'
 import {useAuth} from './AuthProvider.js'
 import Responsive,{useResponsive} from './Components/Responsive'
-
+import {motion} from 'framer-motion'
 import groupChatServices from '../service/GroupChatServices'
-
+import './Styles/BaseStyle.css'
 
 
 
@@ -39,8 +39,7 @@ export default function GroupChatPage() {
             case "GCAVAT":
                 return AddGroupAvatars()
             default:
-                
-                return 
+                return  Addgcomp()
         }
     }
 
@@ -270,8 +269,14 @@ export default function GroupChatPage() {
         zIndex:"2",
     }
         return (
-        !isGCLoading?<>
-        <div id="gcpage-cont">
+        !isGCLoading?
+        <motion.div 
+            id="gcpage-cont"
+            initial={{opacity:0}}
+            animate={{opacity:1}}
+            exit={{opacity:0}}
+        >
+            
         
         {!isMobile?<><div id="gclist-cont">
             <img src={btnLog} id="addgcbtn" onClick={()=>{HandleOpen("GC")}}/>
@@ -281,7 +286,13 @@ export default function GroupChatPage() {
             {details && details[0]?.userroleid===3?<><label>Section</label><label>ATTENDANCE</label></>:currentGC?<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>:<></>}
             {renderSection(sections[currentGC?.gclist_id])}
         </div>
-        </>:<div id="cont" style={burgerClick?{left: "0%"}:{left: "-100%"}}>
+        </>:
+            <motion.div 
+            id="cont"
+            initial={{left: "-100%"}}
+            animate={burgerClick?{left: "0%"}:{left: "-100%"}}
+            transition="2s"
+            >
         <div id="gclist-cont-mob" >
             <img src={btnLog} id="addgcbtn" onClick={()=>{HandleOpen("GC")}}/>
             {renderGCList(joinGC)}
@@ -290,16 +301,16 @@ export default function GroupChatPage() {
             {details && details[0]?.userroleid===3?<><label>Section</label><label>ATTENDANCE</label></>:currentGC?<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>:<></>}
             {renderSection(sections[currentGC?.gclist_id])}
             </div>
-        </div>
+        </motion.div>
         }
-        <div id="chatcont" style={{height:"100vh",width:isMobile?"100vw":"50vw",borderRight:isMobile?"none":"solid black 2px"}}>
+        <div id="chatcont" style={{width:isMobile?"100vw":"50vw",borderRight:isMobile?"none":"solid black 2px"}}>
             {isMobile?<div id="mob-nav-chat"><img/></div>:<></>}
             <div id="messages-area" style={isMobile?{height:"100vh"}:{height:"70%"}}>
                 {renderMessages(allMessages[currentSection])}
             </div>
             <div id="send-cont" style={{height: isMobile?"6vh":"20%"}}>
                 
-                <textarea ref={textArea} style={{height: isMobile?"2vh":"inherit"}}/>
+                <textarea ref={textArea} style={{height: isMobile?"2vh":"inherit",width: "40vw"}}/>
                 
                 <img src={sendIcon} onClick={()=>{HandleSend()}}/>
             </div>
@@ -316,9 +327,11 @@ export default function GroupChatPage() {
                 {RenderHandler()}
             </div>
         
-        </div>
+        </motion.div>
         
-        </>:<LoadingPage/>
+        
+        
+        :<LoadingPage/>
         
         
     )

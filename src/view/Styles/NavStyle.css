@@ -1,16 +1,22 @@
 #nav_cont{
-    border: solid black 2px;
     padding: 2%;
+    background-image: radial-gradient(at bottom center,#53565A,#4B443C);
 }
 #nav_cont > a {
     margin-left: 2%;
+    text-decoration: none;
+    color: #E4E5E8;
+    font-weight: bolder;
 }
 
-
+.active{
+    text-decoration: underline;
+}
 #nav_cont img{
     width: 20vw;
     height: 5vh;
     border: solid black 2px;
+    margin-right: 40vw;
 }
 
 

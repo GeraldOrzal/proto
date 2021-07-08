@@ -4,6 +4,7 @@ import {useHistory} from 'react-router-dom'
 import supabase from '../service/Connection'
 import {useAuth} from './AuthProvider'
 import LoadingPage from './LoadingPage'
+import './Styles/BaseStyle.css'
 export default function HomePage() {
     const [errorMessage, seterrorMessage] = useState()
     const history = useHistory()
@@ -35,7 +36,7 @@ export default function HomePage() {
     return(
         isLoading?
         <LoadingPage/>:
-        <div>
+        <div className="base">
             <label>{errorMessage}</label>
             HOMEPAGE
             <button onClick={HandleLogout}>SIGNOUT</button>
