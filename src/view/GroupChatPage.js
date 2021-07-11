@@ -162,7 +162,8 @@ export default function GroupChatPage() {
             let id = details[0]?.userdetails_id
             let user = {
                 gclist_id,
-                userdetails_id:id
+                userdetails_id:id,
+                activestatus_id:1
             }
             groupChatServices.InsertUser(user)
         })
@@ -283,7 +284,7 @@ export default function GroupChatPage() {
             {renderGCList(joinGC)}
         </div>
         <div id="sectionlist-cont">
-            {details && details[0]?.userroleid===3?<><label>Section</label><label>ATTENDANCE</label></>:currentGC?<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>:<></>}
+            {details && details[0]?.userroleid===3?<><label>Sections</label><label>ATTENDANCE</label></>:currentGC?<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>:<></>}
             {renderSection(sections[currentGC?.gclist_id])}
         </div>
         </>:
@@ -298,7 +299,7 @@ export default function GroupChatPage() {
             {renderGCList(joinGC)}
         </div>
         <div id="sectionlist-cont-mob">
-            {details && details[0]?.userroleid===3?<><label>Section</label><label>ATTENDANCE</label></>:currentGC?<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>:<></>}
+            {details && details[0]?.userroleid===3?<><label>Sections</label><label>ATTENDANCE</label></>:currentGC?<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>:<></>}
             {renderSection(sections[currentGC?.gclist_id])}
             </div>
         </motion.div>

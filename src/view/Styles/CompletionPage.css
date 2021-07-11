@@ -1,7 +1,7 @@
 #completion{
     display: grid;
     grid-template-columns: 50% 50%;
-    padding: 5%;
+    margin-top: 0px;
 }
 #add{
     display:flex;

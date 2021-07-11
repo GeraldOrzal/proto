@@ -1,30 +1,52 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect,useRef} from 'react'
 import './Styles/CompletionPage.css'
 import {useAuth} from './AuthProvider'
 import supabase from '../service/Connection'
 import {Redirect} from 'react-router-dom'
+import './Styles/BaseStyle.css'
 export default function CompletionPage() {
     const {user,details} = useAuth()
     const [isYes,setIsYes] = useState(true)
+    const [optValue, setoptValue] = useState({})
+    const [codeEnabler, setcodeEnabler] = useState(false)
     const [errorMessage,setErrorMessage] = useState()
+    const [codes, setcodes] = useState()
+    const [validCode, setvalidCode] = useState()
+    const [isAdmin, setisAdmin] = useState(false)
+    function SubscribeAdmin(){
+        const userdetails = supabase.from('userdetails:userroleid=eq.3').on('INSERT', payload => {
+                
+    
+        }).subscribe()
+
+    }
     async function HandleSubmit(x){
-        console.log(x)
         x.preventDefault()
+        if(x.target[0].value!=3){
+            if(isAdmin){
+                UpdateCodes(validCode.admincodes_id,true)
+
+            }else{
+                alert("CODES ARE NOT VALID")
+                return;
+            }   
+        }
         const input ={
-            fullname: x.target[0].value+" "+x.target[2].value+" "+x.target[1].value, 
-            dateofbirth: x.target[3].value,
-            mothersmaidenname: x.target[4].value ,
-            driverlicensenumber:x.target[10].value  ,
-            expirationdate: x.target[11].value ,
-            motorvehiclenumber:x.target[13].value ,
-            platenumber:x.target[14].value ,
-            franchisenumber:x.target[15].value ,
-            expirationdate_franchise:x.target[16].value ,
-            otherscooperative:x.target[19].value  
+            fullname: x.target[2].value+" "+x.target[4].value+" "+x.target[3].value, 
+            dateofbirth: x.target[5].value,
+            mothersmaidenname: x.target[6].value ,
+            driverlicensenumber:x.target[12].value  ,
+            expirationdate: x.target[13].value ,
+            motorvehiclenumber:x.target[15].value ,
+            platenumber:x.target[16].value ,
+            franchisenumber:x.target[17].value ,
+            expirationdate_franchise:x.target[18].value ,
+            otherscooperative:x.target[21].value  
         }  
         
-        
-        const { error } = await supabase.from('userdetails').insert([{ fullname: input.fullname, dateofbirth: input.dateofbirth,mothersmaidenname: input.mothersmaidenname ,driverlicensenumber: input.driverlicensenumber ,expirationdate: input.expirationdate,motorvehiclenumber:input.motorvehiclenumber,platenumber:input.platenumber,franchisenumber:input.franchisenumber,franchiseexpirationdate:input.expirationdate_franchise,othercoop:input.otherscooperative ,id :user.id,userroleid:1}])
+        const driver ={ fullname: input.fullname, dateofbirth: input.dateofbirth,mothersmaidenname: input.mothersmaidenname ,driverlicensenumber: input.driverlicensenumber ,expirationdate: input.expirationdate,motorvehiclenumber:input.motorvehiclenumber,platenumber:input.platenumber,franchisenumber:input.franchisenumber,franchiseexpirationdate:input.expirationdate_franchise,othercoop:input.otherscooperative ,id :user.id,userroleid:x.target[0].value,driverstatus_id:2}
+        const admin = { fullname: input.fullname, dateofbirth: input.dateofbirth,mothersmaidenname: input.mothersmaidenname ,driverlicensenumber: input.driverlicensenumber ,expirationdate: input.expirationdate,motorvehiclenumber:input.motorvehiclenumber,platenumber:input.platenumber,franchisenumber:input.franchisenumber,franchiseexpirationdate:input.expirationdate_franchise,othercoop:input.otherscooperative ,id :user.id,userroleid:x.target[0].value}
+        const { error } = await supabase.from('userdetails').insert([x.target[0].value==3?driver:admin])
         if(error){
             setErrorMessage(error.message)
             return;
@@ -32,11 +54,77 @@ export default function CompletionPage() {
         alert("SUCCESS");
         window.location.reload();
     }
+    function RenderOption(optKey){
+        if(Object.keys(optValue).length===0){
+            return(<></>)
+        }
+        
+        let a = Object.keys(optValue[optKey][0])
+        
+        return optValue[optKey].map((x)=>
+            
+            <option value={x[a[0]]}>{x[a[1]]}</option>
+        )
+        
+        
+    }
+    async function PopulateData(table,cb){
+        let { data, error } = await supabase.from(table).select('*')
+        if(error){
+            return
+        }
+        cb(prev=>{
+         return {
+             ...prev,
+            [table]:data
+         }   
+        })
+    }
+    async function GetAllCodes(cb){
+        let { data, error } = await supabase.from('admincodes').select('code,admincodes_id').match({isused:false})
+        if(error){
+            return
+        }
+        cb(data)
+    }
+    async function UpdateCodes(id,bool){
+        const { data, error } = await supabase.from('admincodes').update({ isused: bool }).eq('admincodes_id', id)
+        if(error){
+            return
+        }
+    }
+    useEffect(()=>{
+        //let b = ["userrole"]
+        PopulateData('userrole',setoptValue)
+        GetAllCodes(setcodes);
+    },[])
     return (
         details?.length===0?
-    <>
+    <div className="base">
         <label>{errorMessage}</label>
         <form id="completion" onSubmit={(x)=>{HandleSubmit(x)}}>
+            <label>ACCOUNT TYPE:</label>
+            <select onChange={(x)=>{
+                setcodeEnabler(x.currentTarget.value==3?true:false)
+            }}>
+                {RenderOption('userrole')}
+            </select>
+            <label>CODE:</label>
+            <input disabled={codeEnabler} onChange={(x)=>{
+                let a = []
+                codes.map(({admincodes_id,code})=>{
+                    if(x.currentTarget.value==code.trim()){
+                        a.push({admincodes_id,code})   
+                    }
+                })
+                if(a.length!==0){
+                    setvalidCode(a[0])
+                    setisAdmin(true)
+                    x.currentTarget.style.border="solid green 2px"
+                }else{
+                    x.currentTarget.style.border="solid red 2px"
+                }
+            }}/>
             <label>FIRSTNAME</label>
             <input type="text"/>
             <label>LASTNAME</label>
@@ -95,7 +183,8 @@ export default function CompletionPage() {
             <input type="file"/>
             <button>SUBMIT</button>
         </form>        
-</>:<Redirect to="/user"/>  
+    </div>:
+    <Redirect to="/user"/>  
         
     )
 }
