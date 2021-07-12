@@ -15,9 +15,24 @@ export default function AuthProvider({children}) {
     const [allMessages,setAllMessages] = useState({})
     const [gcAvatar,setGcAvatar] = useState()
     const [userAvatar,setUserAvatar] = useState()
+    const [attendance, setattendance]= useState()
     const [currentSection,setCurrentSection] = useState()
     const [burgerClick, setburgerClick] = useState(false)
+    const [gcmembers,setgcmembers] = useState()
+    async function GetGcMembers(id){
+        let { data: userlist, error } = await supabase.from('userlist').select('*').match({gclist_id:id})
+        if(error){
+            return;
+        }
+        setgcmembers(prev=>{
+            return{
+                ...prev,
+                [id]:userlist
+            }
+        })
+    }
     async function GetDetails(x){
+        console.log(x)
         if(x){
             let { data: UserDetails, error } = await supabase.from('userdetails').select('*').match({id:x.user.id})
             if(error){
@@ -31,12 +46,22 @@ export default function AuthProvider({children}) {
         
         
     }
+    async function GetAllAttendance(cb){
+        let { data: attendance, error } = await supabase.from('attendance').select('*').match({isaccepted:false})
+        if(error){
+            return
+        }
+        cb(attendance)
+    }
     useEffect(() => {
         const session = supabase.auth.session()
         setuser(session?.user ?? null)
         GetDetails(session)
+        const sub = supabase.from('attendance').on('INSERT', payload => {console.log('Change received!', payload)}).subscribe()
+        
         groupChatServices.GetDefaultAvatars("defaultavatars","groupphoto",setGcAvatar);
         groupChatServices.GetDefaultAvatars("defaultavatars","useravatars",setUserAvatar);
+        console.log(supabase.getSubscriptions())
         const {data:listener} = supabase.auth.onAuthStateChange(
             async (event, session) => {
                 setuser(session?.user ?? null)
@@ -48,10 +73,12 @@ export default function AuthProvider({children}) {
         }
        
         return ()=>{
+            sub?.unsubscribe()
             listener?.unsubscribe();
         }
     }, [])
     function InitGC(){
+        
         groupChatServices.GetAllGroupChat(details[0]?.userdetails_id,(createdgc)=>{    
             if(Object.entries(createdgc).length===0){
                 setisLoading(false)
@@ -59,7 +86,9 @@ export default function AuthProvider({children}) {
             }
             let temp = {}
             createdgc.forEach(element => {
+                
                 const {groupname,datecreated,timecreated,fullname,gclist_id,groupavatar,code} = element;
+                GetGcMembers(gclist_id)
                 let newGc = {
                     groupname,
                     datecreated,
@@ -94,6 +123,7 @@ export default function AuthProvider({children}) {
         if(Object.entries(joinGC).length===0){   
             InitGC()
         }
+        GetAllAttendance(setattendance)
         let subgc = supabase.from('userlist:userdetails_id=eq.'+details[0]?.userdetails_id).on('INSERT', payload => {
             groupChatServices.GetCurrentGC(payload.new.gclist_id,(v)=>{
                 let {groupname,datecreated,fullname,timecreated,gclist_id,code,groupavatar} = v[0];
@@ -267,7 +297,7 @@ export default function AuthProvider({children}) {
         }
     },[isLoading])
     const value ={
-        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick
+        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers,attendance
     }
     return (
         <UserContext.Provider value={value}>

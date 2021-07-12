@@ -14,6 +14,8 @@ import Nav from './view/Components/Nav';
 import Dashboard from './view/Dashboard'
 import Membership from './view/Membership';
 import Responsive,{useResponsive} from './view/Components/Responsive';
+import Admin from './view/Admin'
+import BOD from './view/BOD'
 import {AnimatePresence} from 'framer-motion'
 
 const controlPanelPath = "controlpanel";
@@ -30,10 +32,12 @@ function App() {
                       <PrivateRoute exact path="/completion" component={CompletionPage} key={2}/>
                       <PrivateRoute exact path="/user"  component={HomePage} key={3}/>
                       <PrivateRoute exact path="/groupchats" component={GroupChatPage} key={4}/>
-                      <PrivateRoute exact path={"/"+controlPanelPath} component ={Dashboard} key={5}/>
+                      <PrivateRoute exact path={"/"+controlPanelPath+"/dashboard"} component ={Dashboard} key={5}/>
                       <PrivateRoute exact path={"/"+controlPanelPath+"/membership"} component ={Membership} key={6}/>
-                      <Route path="/signin" component={SigninPage} key={7}/>
-                      <Route path="/signup" component={SignupPage} key={8}/>
+                      <PrivateRoute exact path={"/"+controlPanelPath+"/admin"} component ={Admin} key={7}/>
+                      <PrivateRoute exact path={"/"+controlPanelPath+"/bod"} component ={BOD} key={8}/>
+                      <Route path="/signin" component={SigninPage} key={9}/>
+                      <Route path="/signup" component={SignupPage} key={10}/>
                   </AnimatePresence>
                   
                 </Switch>

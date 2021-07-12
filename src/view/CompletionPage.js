@@ -13,11 +13,11 @@ export default function CompletionPage() {
     const [codes, setcodes] = useState()
     const [validCode, setvalidCode] = useState()
     const [isAdmin, setisAdmin] = useState(false)
-    function SubscribeAdmin(){
-        const userdetails = supabase.from('userdetails:userroleid=eq.3').on('INSERT', payload => {
-                
-    
+    function SubscribeToChangesInCode(){
+        const admincodes = supabase.from('admincodes').on('UPDATE', payload => {
+            setcodes(payload.new)
         }).subscribe()
+        return admincodes;
 
     }
     async function HandleSubmit(x){
@@ -97,6 +97,10 @@ export default function CompletionPage() {
         //let b = ["userrole"]
         PopulateData('userrole',setoptValue)
         GetAllCodes(setcodes);
+        const listener = SubscribeToChangesInCode()
+        return ()=>{
+            listener.unsubscribe()
+        }
     },[])
     return (
         details?.length===0?

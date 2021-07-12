@@ -17,7 +17,7 @@ import './Styles/BaseStyle.css'
 export default function GroupChatPage() {    
     const {isMobile} = useResponsive()
     const [isDark,setIsDark] = useState(true)
-    const {details,joinGC,sections,allMessages,isLoading,gcAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick} = useAuth()
+    const {details,joinGC,sections,allMessages,isLoading,gcAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers} = useAuth()
     const [currentGC,setCurrentGC] = useState()
     const [isGCLoading,setIsLoading] = useState(true)
     const [compPop,setCompPop] = useState("GC")
@@ -25,7 +25,7 @@ export default function GroupChatPage() {
     const gcRefStore = useRef()
     const textArea = useRef()
     const [currentCode,setCurrentCode] = useState()
-    
+    const [isAttendance, setattendance] = useState(false)
     function HandleOpen(comp){
         document.getElementById('darkbg').style.display = "block"
         document.getElementById('popup-cont').style.display = "flex"
@@ -48,7 +48,7 @@ export default function GroupChatPage() {
             length: 8,
             charset: 'alphanumeric'
         }))
-        
+        console.log(gcmembers)
     },[])
     useEffect(()=>{
         if(Object.entries(joinGC).length===0){
@@ -299,7 +299,7 @@ export default function GroupChatPage() {
             {renderGCList(joinGC)}
         </div>
         <div id="sectionlist-cont-mob">
-            {details && details[0]?.userroleid===3?<><label>Sections</label><label>ATTENDANCE</label></>:currentGC?<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>:<></>}
+            {details && details[0]?.userroleid===3?<><label>Sections</label><label onClick={()=>{}}>ATTENDANCE</label></>:currentGC?<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>:<></>}
             {renderSection(sections[currentGC?.gclist_id])}
             </div>
         </motion.div>

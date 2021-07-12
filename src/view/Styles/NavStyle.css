@@ -53,3 +53,11 @@
     height: 5vh;
 }
 
+#others{
+    position: absolute;
+    height: 20vh;
+    background-color: white;
+    left: 78%;
+    display: flex;
+    flex-direction: column;
+}

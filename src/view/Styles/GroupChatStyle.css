@@ -117,9 +117,7 @@
     align-self: flex-end;
 
 }
-form{
-    margin-top: 2%;
-}
+
 #join{
     display: flex;
     flex-direction: column;

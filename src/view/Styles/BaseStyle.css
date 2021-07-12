@@ -2,3 +2,13 @@
     background-image: radial-gradient(at top center,#53565A,#4B443C);
     height: 100vh;
 }
+#bodpanel{
+    display: flex;
+    flex-direction: row;
+}
+#form_attendance{
+    padding: 2%;
+    width: 50vw;
+    display: flex;
+    flex-direction:column;
+}
