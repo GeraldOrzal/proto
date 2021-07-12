@@ -162,8 +162,7 @@ export default function GroupChatPage() {
             let id = details[0]?.userdetails_id
             let user = {
                 gclist_id,
-                userdetails_id:id,
-                activestatus_id:1
+                userdetails_id:id
             }
             groupChatServices.InsertUser(user)
         })
