@@ -15,7 +15,7 @@ export default function AuthProvider({children}) {
     const [allMessages,setAllMessages] = useState({})
     const [gcAvatar,setGcAvatar] = useState()
     const [userAvatar,setUserAvatar] = useState()
-    const [attendance, setattendance]= useState()
+    const [schedule, setschedule]= useState()
     const [currentSection,setCurrentSection] = useState()
     const [burgerClick, setburgerClick] = useState(false)
     const [gcmembers,setgcmembers] = useState()
@@ -46,8 +46,8 @@ export default function AuthProvider({children}) {
         
         
     }
-    async function GetAllAttendance(cb){
-        let { data: attendance, error } = await supabase.from('attendance').select('*').match({isaccepted:false})
+    async function GetAllSchedules(cb){
+        let { data: attendance, error } = await supabase.from('schedules').select('*').match({isactive:true})
         if(error){
             return
         }
@@ -57,11 +57,16 @@ export default function AuthProvider({children}) {
         const session = supabase.auth.session()
         setuser(session?.user ?? null)
         GetDetails(session)
-        const sub = supabase.from('attendance').on('INSERT', payload => {console.log('Change received!', payload)}).subscribe()
+        
+        const sub = supabase.from('schedules').on('INSERT', payload => {
+            setschedule(prev=>{
+                return [...prev,payload.new]
+            })
+        }).subscribe()
         
         groupChatServices.GetDefaultAvatars("defaultavatars","groupphoto",setGcAvatar);
         groupChatServices.GetDefaultAvatars("defaultavatars","useravatars",setUserAvatar);
-        console.log(supabase.getSubscriptions())
+        
         const {data:listener} = supabase.auth.onAuthStateChange(
             async (event, session) => {
                 setuser(session?.user ?? null)
@@ -123,7 +128,7 @@ export default function AuthProvider({children}) {
         if(Object.entries(joinGC).length===0){   
             InitGC()
         }
-        GetAllAttendance(setattendance)
+        GetAllSchedules(setschedule)
         let subgc = supabase.from('userlist:userdetails_id=eq.'+details[0]?.userdetails_id).on('INSERT', payload => {
             groupChatServices.GetCurrentGC(payload.new.gclist_id,(v)=>{
                 let {groupname,datecreated,fullname,timecreated,gclist_id,code,groupavatar} = v[0];
@@ -244,9 +249,7 @@ export default function AuthProvider({children}) {
         
         
     },[joinGC,details])
-    useEffect(()=>{
-        console.log(isLoading)
-        
+    useEffect(()=>{        
         let listener = []
         let key = Object.keys(sections)
         key.map((c)=>{
@@ -297,7 +300,7 @@ export default function AuthProvider({children}) {
         }
     },[isLoading])
     const value ={
-        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers,attendance
+        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers,schedule
     }
     return (
         <UserContext.Provider value={value}>

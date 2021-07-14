@@ -4,7 +4,7 @@ import {Redirect} from 'react-router-dom'
 import supabase from '../service/Connection'
 import './Styles/BaseStyle.css'
 export default function BOD() {
-    const {gcmembers,details,attendance} = useAuth()
+    const {gcmembers,details,schedule} = useAuth()
     
     const [hub, sethub] = useState()
     function HandleForms(x){
@@ -14,13 +14,14 @@ export default function BOD() {
             start_at:x.target[1].value,
             end_at:x.target[2].value,
             num_people:x.target[3].value,
-            submitted_by:details[0].userdetails_id
+            submitted_by:details[0].userdetails_id,
+            isactive:true
         }
-        SubmitAttendance(input)
+        SubmitSchedule(input)
     }
     
-    async function SubmitAttendance(input){
-        const { error } = await supabase.from('attendance').insert([input])
+    async function SubmitSchedule(input){
+        const { error } = await supabase.from('schedules').insert([input])
         if(error){
             return
         }
@@ -48,6 +49,7 @@ export default function BOD() {
         return data?.map((s)=><li value={s}>{"HUB: "+s.hub_id+" DATE: "+s.start_at+"-"+s.end_at+" NEEDED PERSONNEL:"+s.num_people} <button>EDIT</button> <button>REMOVE</button></li>)
     }
     useEffect(()=>{
+        
         PopulateData()
     },[])
     return (
@@ -72,7 +74,7 @@ export default function BOD() {
             </form>
             <ul>
                 <label>ACTIVE SCHEDS:</label>
-                {RenderList(attendance)}
+                {RenderList(schedule)}
             </ul>
         </div>
     )

@@ -12,3 +12,38 @@
     display: flex;
     flex-direction:column;
 }
+#adminpage{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 80vh;
+    column-gap: 10vw;
+}
+#gcslots{
+    display: grid;
+    padding: 2%;
+    grid-template-columns: auto auto auto;
+    width: 50vw;
+    border: solid black 2px;
+    height: 50vh;
+    gap: 2%;
+    overflow-y: scroll;
+}
+#availsched{
+    display: flex;
+    flex-direction: column;
+}
+.slots{
+    border: solid black 2px;
+    height: 20vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.sched{
+    width: 10vw;
+    border: solid black 2px;
+    height: 5vh;
+    margin-bottom: 2%;
+    
+}
