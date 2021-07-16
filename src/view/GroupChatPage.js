@@ -11,14 +11,15 @@ import Responsive,{useResponsive} from './Components/Responsive'
 import {motion} from 'framer-motion'
 import groupChatServices from '../service/GroupChatServices'
 import './Styles/BaseStyle.css'
+import Calendar from 'react-calendar'
 
 
 
 export default function GroupChatPage() {    
     const {isMobile} = useResponsive()
     const [isDark,setIsDark] = useState(true)
-    const {details,joinGC,sections,allMessages,isLoading,gcAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers} = useAuth()
     const [currentGC,setCurrentGC] = useState()
+    const {details,joinGC,sections,allMessages,isLoading,gcAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers,schedule} = useAuth()
     const [isGCLoading,setIsLoading] = useState(true)
     const [compPop,setCompPop] = useState("GC")
     const gcRef = useRef()
@@ -26,6 +27,7 @@ export default function GroupChatPage() {
     const textArea = useRef()
     const [currentCode,setCurrentCode] = useState()
     const [isAttendance, setattendance] = useState(false)
+    const [isAnnouncement, setAnnouncement] = useState(false)
     function HandleOpen(comp){
         document.getElementById('darkbg').style.display = "block"
         document.getElementById('popup-cont').style.display = "flex"
@@ -106,6 +108,7 @@ export default function GroupChatPage() {
         
     }
     function SetCurrentSection(x){   
+        setAnnouncement(false)
         if(isMobile){
             setburgerClick(!burgerClick)
             
@@ -232,7 +235,7 @@ export default function GroupChatPage() {
             </>}
         </div>
         <label className="dt" hidden={true}>{x.datesent+":"+x.timesent}</label>
-    </div>||console.log(list)
+    </div>
         )   
     )
 )
@@ -268,6 +271,18 @@ export default function GroupChatPage() {
         flexDirection: "column",
         zIndex:"2",
     }
+    function AcceptSched(){
+
+    }
+    function RenderDays(s){
+           let temp = []
+           for (let index = s; index >=0; index--) {
+               temp.push(<tr>{index}</tr>)
+               
+           }
+           console.log(temp)
+    }
+ 
         return (
         !isGCLoading?
         <motion.div 
@@ -283,7 +298,9 @@ export default function GroupChatPage() {
             {renderGCList(joinGC)}
         </div>
         <div id="sectionlist-cont">
-            {details && details[0]?.userroleid===3?<><label>Sections</label><label>ATTENDANCE</label></>:currentGC?<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTION</label>:<></>}
+            {details[0]?.userroleid===3?currentGC?<><label>SECTIONS</label> <label onClick={()=>{
+                setAnnouncement(true)
+            }}>ANNOUNCEMENTS</label></>:<></>:<label onClick={()=>{HandleOpen("SECT")}}>ADD SECTIONS</label>}
             {renderSection(sections[currentGC?.gclist_id])}
         </div>
         </>:
@@ -303,7 +320,26 @@ export default function GroupChatPage() {
             </div>
         </motion.div>
         }
-        <div id="chatcont" style={{width:isMobile?"100vw":"50vw",borderRight:isMobile?"none":"solid black 2px"}}>
+        {isAnnouncement?<div id="announcement">
+            <Calendar value={new Date()} tileContent={
+                
+               ({ date, view }) => {
+                   return schedule.map((s)=>{
+                        
+                        if(s.assign_at==currentGC?.gclist_id&&s.start_at===date.toISOString().split("T")[0]){
+                            return <div className="sched_ann">
+                                <label>{s.description}</label>
+                            </div>
+                        }
+                        
+                   }
+                       
+                   )
+               }
+            } onClickDay={(s,r)=>{
+                console.log(s,r)
+            }}/>
+        </div>:<><div id="chatcont" style={{width:isMobile?"100vw":"50vw",borderRight:isMobile?"none":"solid black 2px"}}>
             {isMobile?<div id="mob-nav-chat"><img/></div>:<></>}
             <div id="messages-area" style={isMobile?{height:"100vh"}:{height:"70%"}}>
                 {renderMessages(allMessages[currentSection])}
@@ -315,6 +351,7 @@ export default function GroupChatPage() {
                 <img src={sendIcon} onClick={()=>{HandleSend()}}/>
             </div>
         </div>
+        
         <div id="opt-cont">
                 <img src={currentGC?.groupavatar}/>
                 <label>{currentGC?.groupname}</label>
@@ -325,7 +362,8 @@ export default function GroupChatPage() {
             <div id="popup-cont" style={isMobile?mobStyle:{}}>
                 <img src={closeBtn} onClick={()=>{HandleClose()}}/>
                 {RenderHandler()}
-            </div>
+            </div></>}
+        
         
         </motion.div>
         

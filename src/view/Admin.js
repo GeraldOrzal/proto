@@ -7,6 +7,7 @@ import '../view/Styles/BaseStyle.css'
 export default function Admin() {
     const {gcmembers,joinGC,details,schedule,isLoading} = useAuth()
     const [list, setlist] = useState({})
+    const [isLock, setisLock] = useState(false)
     useEffect(()=>{
         let a =  Object.keys(joinGC)
         let temp = {
@@ -31,12 +32,12 @@ export default function Admin() {
         setlist(temp)
         console.log(temp)
     },[])
-    function RenderDraggable(e,index){
-        return <Draggable draggableId={e.schedule_id.toString()} index={index} key={e.schedule_id}type="SCHED" >
+    function RenderDraggable(e,index,isDis){
+        return <Draggable draggableId={e.schedule_id.toString()} index={index} key={e.schedule_id}type="SCHED" isDragDisabled={isDis} >
             {
                 (provided)=>(
                     <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}className="sched">
-                        <label>{e.schedule_id}</label>
+                        <label>{e.description+"\n PERSONS:"+e.num_people+"\n BOD:"+e.fullname}</label>
                         {provided.placeholder}
                     </div>
                 )
@@ -52,10 +53,12 @@ export default function Admin() {
            
            return(
             <Droppable droppableId={r} type="SCHED">
-           
-            {(provided, snapshot) => 
+            
+            {(provided, snapshot) =>     
+            
                 <div ref={provided.innerRef} className="slots"> 
-                    {list[r]?.map((t,index)=>RenderDraggable(t,index))}            
+                    <label>{joinGC[r].groupname}</label>
+                    {list[r]?.map((t,index)=>RenderDraggable(t,index,isLock))}            
                     {provided.placeholder}
                 </div>
                 }
@@ -70,7 +73,7 @@ export default function Admin() {
    
     function RenderSched(){
         
-        return list.notassigned?.map((e,index)=>RenderDraggable(e,index))
+        return list.notassigned?.map((e,index)=>RenderDraggable(e,index,false))
     }
     async function UpdateAssign(s){
         Move(s)

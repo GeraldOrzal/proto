@@ -47,10 +47,11 @@ export default function AuthProvider({children}) {
         
     }
     async function GetAllSchedules(cb){
-        let { data: attendance, error } = await supabase.from('schedules').select('*').match({isactive:true})
+        let { data: attendance, error } = await supabase.from('schedule_modif').select('*').match({isactive:true})
         if(error){
             return
         }
+        console.log(attendance)
         cb(attendance)
     }
     useEffect(() => {
@@ -59,6 +60,10 @@ export default function AuthProvider({children}) {
         GetDetails(session)
         
         const sub = supabase.from('schedules').on('INSERT', payload => {
+            setschedule(prev=>{
+                return [...prev,payload.new]
+            })
+        }).on('UPDATE',payload=>{
             setschedule(prev=>{
                 return [...prev,payload.new]
             })
