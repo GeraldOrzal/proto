@@ -12,7 +12,7 @@ export default function Nav(props) {
     const list={auth:[{linkName:"HOME",pathName:"/user"},{linkName:"GROUPCHATS",pathName:"/groupchats"},{linkName:"ACCOUNT",pathName:"/account"}],notAuth:[{linkName:"ABOUT US",pathName:"/aboutus"},{linkName:"HOW TO SIGNUP?",pathName:"/howtosignup"},{linkName:"SIGNIN",pathName:"/signin"}]}
     
     const {user,burgerClick,details,setburgerClick} = useAuth();
-    const onCPLhover = [{linkName:"Dashboard",pathName:"/controlpanel/dashboard"},{linkName:"Membership",pathName:"/controlpanel/membership"},details[0]?.userroleid===1?{linkName:"BOD",pathName:"/controlpanel/bod"}:{linkName:"Admin",pathName:"/controlpanel/admin"}]
+    const onCPLhover = [{linkName:"Dashboard",pathName:"/controlpanel/dashboard"},{linkName:"Membership",pathName:"/controlpanel/membership"},user&&details[0]?.userroleid===1?{linkName:"BOD",pathName:"/controlpanel/bod"}:{linkName:"Admin",pathName:"/controlpanel/admin"}]
     const authStyle = {left:burgerClick?"0%":"-100%",flexDirection: "row",width: "100%",height: "7vh",top: "93%",columnGap:"20%" }
     const [isHover, setisHover] = useState(false)
     const renderLink = (list)=>{
