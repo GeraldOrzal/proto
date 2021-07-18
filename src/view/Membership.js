@@ -17,6 +17,13 @@ async function PopulateData(table,cb){
     cb(data)
 
 }
+async function UpdateDriverStatus(id,userdetails_id){
+    const { error } = await supabase.from('userdetails').update({ driverstatus_id: id }).eq('userdetails_id', userdetails_id)
+    if(error){
+        return
+    }
+
+}
 useEffect(()=>{
     if(current===undefined){
         return;
@@ -24,10 +31,8 @@ useEffect(()=>{
     
 },[current])
 function RenderOption(current){
-    if(status===undefined){
-        return(<></>)
-    }
-    return status.map(({driverstatus_id,description})=>{
+    
+    return status?.map(({driverstatus_id,description})=>{
         return <option key={driverstatus_id} selected={current===driverstatus_id?"selected":""} value={driverstatus_id}>{description}</option>
     })
     
@@ -40,10 +45,7 @@ function RenderTableRows(){
             <td>
                 
                 <select onChange={(x)=>{
-                    setCurrent({
-                        userdetails_id:userdetails_id,
-                        driverstatus_id:x.currentTarget.value
-                    })
+                    UpdateDriverStatus(x.currentTarget.value,userdetails_id)
                 }}>
                     {RenderOption(driverstatus_id)}        
                 </select>
@@ -64,7 +66,7 @@ useEffect(()=>{
     PopulateData('driverstatus',setstatus);
 },[])
     return (
-        details.userroleid===3?<Redirect to="/unauthorized"/>:
+        details[0].userroleid===3?<Redirect to="/unauthorized"/>:
         <div className="base">
                 <table>
                         <thead>
@@ -87,7 +89,7 @@ useEffect(()=>{
                             {RenderTableRows()}
                         </tbody>
                         
-                        
+                    
                     </table>
         </div>
     )

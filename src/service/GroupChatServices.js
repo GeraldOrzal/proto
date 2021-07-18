@@ -8,7 +8,7 @@ class GroupChatServices {
         storage(messages)
         
     }
-    async UploadPhoto(bucket,folder,file,cb){
+    async UploadFile(bucket,folder,file,cb){
         const {data,error} = await supabase.storage.from(bucket).upload(folder,file)
         if(error){
             return 
@@ -25,6 +25,27 @@ class GroupChatServices {
         cb(make_sense_message)
         
     }
+    GetFileViaKey(bucket,key,cb){
+        const {data,error} = supabase.storage.from(bucket).getPublicUrl(key)
+        if(error){
+            return
+        }
+        cb(data)
+    }
+    async UpdateSchedulePeople(currentCount,schedule_id,cb,type){
+        let latestVal
+        if(type==="ADD"){
+            latestVal = currentCount+1
+        }else{
+            latestVal = currentCount-1
+        }
+        const { data, error } = await supabase.from('schedules').update({ num_people: latestVal }).eq('schedule_id', schedule_id)
+        if(error){
+            return
+        }
+        cb()
+    }
+  
     async InsertGC(value){
         const { error } = await supabase.from('gclist').insert([value])
         console.log(error)
@@ -96,6 +117,28 @@ class GroupChatServices {
         }
         
     }
+    Download(bucket,path){
+        const a = supabase.storage.from(bucket).download(path)
+        console.log(a)
+    }
+    async InsertResponse(){
+        const { data, error } = await supabase.from('scheduleaccepted').insert([{ some_column: 'someValue', other_column: 'otherValue' }])
+    }
+
+    AcceptSched(schedule_id,currentCount,details){
+        if(currentCount===0){
+            alert("NO SLOTS AVAILABLE")
+            return;
+        }
+        
+        this.UpdateSchedulePeople(currentCount,schedule_id,async ()=> {
+            const { data, error } = await supabase.from('scheduleaccepted').insert([{ schedule_id: schedule_id, responded_by: details,remarks_id:2 }])
+            if(error){
+                return
+            }   
+        },"SUB")      
+    }
+    
     async GetCurrentGC(id,cb){
         let { data: createdgc, error } = await supabase.from('getallgc').select('*').match({gclist_id:id})
         if(error){

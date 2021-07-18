@@ -6,20 +6,23 @@ import btnLog from './Icons/plus.svg'
 import sendIcon from './Icons/send.svg'
 import upload from './Icons/upload.png'
 import closeBtn from './Icons/close.png'
+import listIcon from './Icons/list.svg'
 import {useAuth} from './AuthProvider.js'
 import Responsive,{useResponsive} from './Components/Responsive'
 import {motion} from 'framer-motion'
 import groupChatServices from '../service/GroupChatServices'
 import './Styles/BaseStyle.css'
 import Calendar from 'react-calendar'
-
+import paperclip from './Icons/paper-clip.svg'
+import fileIcon from './Icons/file.svg'
 
 
 export default function GroupChatPage() {    
     const {isMobile} = useResponsive()
     const [isDark,setIsDark] = useState(true)
     const [currentGC,setCurrentGC] = useState()
-    const {details,joinGC,sections,allMessages,isLoading,gcAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers,schedule} = useAuth()
+    const [file, setfile] = useState()
+    const {details,joinGC,sections,allMessages,isLoading,gcAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers,schedule,driverSched} = useAuth()
     const [isGCLoading,setIsLoading] = useState(true)
     const [compPop,setCompPop] = useState("GC")
     const gcRef = useRef()
@@ -27,6 +30,9 @@ export default function GroupChatPage() {
     const textArea = useRef()
     const [currentCode,setCurrentCode] = useState()
     const [isAttendance, setattendance] = useState(false)
+    const [clickSched, setclickSched] = useState()
+    const [acceptedSched,setAcceptedSched] = useState()
+    const [clicklist, setclicklist] = useState(false)
     const [isAnnouncement, setAnnouncement] = useState(false)
     function HandleOpen(comp){
         document.getElementById('darkbg').style.display = "block"
@@ -68,7 +74,11 @@ export default function GroupChatPage() {
         }
         
     },[isGCLoading])
-    
+    function RenderAcceptedSched(){
+        return driverSched?.map((s)=>{
+            return <li>{s.schedule_id}<button>REMOVE</button></li>
+        })
+    }
     function CreateGroupChat(x){
         x.preventDefault()
         const value = {
@@ -97,13 +107,30 @@ export default function GroupChatPage() {
         if(currentSection===undefined){
             return
         }
-        const value = {
-            userdetails_id: details[0]?.userdetails_id,
-            messsagebody: textArea.current.value,
-            section_id: currentSection
+        if(file!==undefined){
+            groupChatServices.UploadFile("files",details[0].fullname+"/"+file.filename,file.file,(s)=>{
+                
+                const value = {
+                userdetails_id: details[0]?.userdetails_id,
+                    messsagebody: s.Key,
+                    section_id: currentSection,
+                    messagetype_id: 1,
+                    filename: file.filename
+                }
+                groupChatServices.InsertMessage(value)
+                setfile(undefined)
+            })
+        }else{
+            const value = {
+                userdetails_id: details[0]?.userdetails_id,
+                messsagebody: textArea.current.value,
+                section_id: currentSection,
+                messagetype_id: 3
+            }
+            groupChatServices.InsertMessage(value)
+        
         }
-        groupChatServices.InsertMessage(value)
-    
+        
         
         
     }
@@ -175,7 +202,7 @@ export default function GroupChatPage() {
         input.type = 'file';
         input.onchange = _ => {
                 let files =   Array.from(input.files);
-                groupChatServices.UploadPhoto("defaultavatars","groupphoto/"+files[0].name,files[0],
+                groupChatServices.UploadFile("defaultavatars","groupphoto/"+files[0].name,files[0],
                 ()=>{
                     setCompPop("GC")                    
                     gcRef.current.src=groupChatServices.GetAvatarURL("defaultavatars","groupphoto",files[0].name)
@@ -224,19 +251,34 @@ export default function GroupChatPage() {
         })
     }
     const renderMessages = (list) =>(    
-    list?.map((x)=>(<div className="messages" style={{alignSelf:details[0]?.userdetails_id === x.userdetails_id?'flex-end':'flex-start'}}>  
-        <label>{x.fullname}</label>
-        <div className="avat-cont">
-            {details[0]?.userdetails_id === x.userdetails_id?<><label className="mesBody">{x.messsagebody}</label>
-            <img className="useravatar" src={x.useravatar}/></>:<>
-            <img className="useravatar" src={x.useravatar}/>
-            <label className="mesBody">{x.messsagebody}</label>
-            
-            </>}
+    list?.map((x)=>x.messagetype_id===1?<div className="files" onClick={()=>{
+        groupChatServices.Download("files",x.messsagebody.substring(6,x.messsagebody.length))
+    }} >
+        {details[0]?.userdetails_id === x.userdetails_id?
+        <div >
+            <img src={fileIcon}/>
+            <label> {x.filename}</label>
         </div>
-        <label className="dt" hidden={true}>{x.datesent+":"+x.timesent}</label>
+        :<div>
+            <img className="useravatar"/>
+            <img src={fileIcon}/>
+            <label> {x.filename}</label>
+            
+        </div>}
     </div>
-        )   
+    :<div className="messages" style={{alignSelf:details[0]?.userdetails_id === x.userdetails_id?'flex-end':'flex-start'}}>  
+    <label>{x.fullname}</label>
+    <div className="avat-cont">
+        {details[0]?.userdetails_id === x.userdetails_id?<><label className="mesBody">{x.messsagebody}</label>
+        <img className="useravatar" src={x.useravatar}/></>:<>
+        <img className="useravatar" src={x.useravatar}/>
+        <label className="mesBody">{x.messsagebody}</label>
+        
+        </>}
+    </div>
+    <label className="dt" hidden={true}>{x.datesent+":"+x.timesent}</label>
+</div>
+          
     )
 )
     const renderMember = (list) =>{
@@ -271,17 +313,21 @@ export default function GroupChatPage() {
         flexDirection: "column",
         zIndex:"2",
     }
-    function AcceptSched(){
-
+    
+    function UploadAttachments(){
+        
+        if(currentSection!==undefined){
+            let input = document.createElement('input');
+            input.type = 'file';
+            input.onchange= ()=>{
+                let files =   Array.from(input.files);
+                setfile({file:files[0],filename:files[0].name})
+            }
+            input.click()
+        }
+        
     }
-    function RenderDays(s){
-           let temp = []
-           for (let index = s; index >=0; index--) {
-               temp.push(<tr>{index}</tr>)
-               
-           }
-           console.log(temp)
-    }
+    
  
         return (
         !isGCLoading?
@@ -321,13 +367,44 @@ export default function GroupChatPage() {
         </motion.div>
         }
         {isAnnouncement?<div id="announcement">
+            {clickSched?<div id="floating-sched">
+                <label>Hub:{ " "+clickSched.description}</label>
+                <label>start:{ " "+clickSched.start_at} end at: {" "+clickSched.end_at}</label>
+                <label>No of person needed:{" "+clickSched.num_people}</label>
+                <button onClick={()=>{
+                    groupChatServices.AcceptSched(clickSched.schedule_id,clickSched.num_people,details[0]?.userdetails_id)
+                   if(clickSched.num_people!=0){
+                        setclickSched(prev=>{
+                            return{
+                                ...prev,
+                                num_people:clickSched.num_people-1
+                            }
+
+                        })
+                   }
+                }}>ACCEPT</button>
+                
+            </div>:<></>}
+                <div id="float-acceptedsched">
+                    <img src={listIcon} onClick={()=>{
+                        setclicklist(!clicklist)
+                    }}/>       
+                    {clicklist?<ul>
+                        <label>Accepted Schedule</label>
+                        {RenderAcceptedSched()}
+                    </ul>:<></>}
+                
+                </div>
             <Calendar value={new Date()} tileContent={
                 
                ({ date, view }) => {
                    return schedule.map((s)=>{
                         
                         if(s.assign_at==currentGC?.gclist_id&&s.start_at===date.toISOString().split("T")[0]){
-                            return <div className="sched_ann">
+
+                            return <div className="sched_ann" key={s.schedule_id} onClick={()=>{
+                                setclickSched(s)
+                            }}>
                                 <label>{s.description}</label>
                             </div>
                         }
@@ -336,16 +413,23 @@ export default function GroupChatPage() {
                        
                    )
                }
-            } onClickDay={(s,r)=>{
-                console.log(s,r)
-            }}/>
-        </div>:<><div id="chatcont" style={{width:isMobile?"100vw":"50vw",borderRight:isMobile?"none":"solid black 2px"}}>
+            } 
+           />
+        </div>:<>
+            <div id="chatcont" style={{width:isMobile?"100vw":"50vw",borderRight:isMobile?"none":"solid black 2px"}}>
             {isMobile?<div id="mob-nav-chat"><img/></div>:<></>}
+
             <div id="messages-area" style={isMobile?{height:"100vh"}:{height:"70%"}}>
                 {renderMessages(allMessages[currentSection])}
             </div>
+           {file? <div id="attachments-area">
+                <img src={fileIcon}/>
+                <label>{file.filename}</label>
+            </div>:<></>}
             <div id="send-cont" style={{height: isMobile?"6vh":"20%"}}>
-                
+                <img src={paperclip} onClick={()=>{
+                    UploadAttachments()
+                }}/>
                 <textarea ref={textArea} style={{height: isMobile?"2vh":"inherit",width: "40vw"}}/>
                 
                 <img src={sendIcon} onClick={()=>{HandleSend()}}/>

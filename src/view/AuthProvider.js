@@ -19,6 +19,14 @@ export default function AuthProvider({children}) {
     const [currentSection,setCurrentSection] = useState()
     const [burgerClick, setburgerClick] = useState(false)
     const [gcmembers,setgcmembers] = useState()
+    const [driverSched, setdriverSched] = useState()
+    async function GetDriverSched(){
+        let { data: scheduleaccepted, error } = await supabase.from('scheduleaccepted').select('*').match({responded_by:details[0]?.userdetails_id,remarks_id:2})
+        if(error){
+            return
+        }
+        setdriverSched(scheduleaccepted)
+    }
     async function GetGcMembers(id){
         let { data: userlist, error } = await supabase.from('userlist').select('*').match({gclist_id:id})
         if(error){
@@ -47,7 +55,7 @@ export default function AuthProvider({children}) {
         
     }
     async function GetAllSchedules(cb){
-        let { data: attendance, error } = await supabase.from('schedule_modif').select('*').match({isactive:true})
+        let { data: attendance, error } = await supabase.from('schedule_modif').select('*').match({isactive:true,remarks_id:2})
         if(error){
             return
         }
@@ -60,13 +68,9 @@ export default function AuthProvider({children}) {
         GetDetails(session)
         
         const sub = supabase.from('schedules').on('INSERT', payload => {
-            setschedule(prev=>{
-                return [...prev,payload.new]
-            })
+            GetAllSchedules(setschedule)
         }).on('UPDATE',payload=>{
-            setschedule(prev=>{
-                return [...prev,payload.new]
-            })
+            GetAllSchedules(setschedule)
         }).subscribe()
         
         groupChatServices.GetDefaultAvatars("defaultavatars","groupphoto",setGcAvatar);
@@ -133,6 +137,7 @@ export default function AuthProvider({children}) {
         if(Object.entries(joinGC).length===0){   
             InitGC()
         }
+        GetDriverSched()
         GetAllSchedules(setschedule)
         let subgc = supabase.from('userlist:userdetails_id=eq.'+details[0]?.userdetails_id).on('INSERT', payload => {
             groupChatServices.GetCurrentGC(payload.new.gclist_id,(v)=>{
@@ -281,7 +286,7 @@ export default function AuthProvider({children}) {
                 
             }).subscribe()
             listener.push(messages)
-            groupChatServices.GetAllMessages(v.section_id,(val)=>{
+                groupChatServices.GetAllMessages(v.section_id,(val)=>{
                 setAllMessages(prevState=>{
                     return {
                         ...prevState,
@@ -305,7 +310,7 @@ export default function AuthProvider({children}) {
         }
     },[isLoading])
     const value ={
-        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers,schedule
+        user,details,joinGC,sections,allMessages,isLoading,gcAvatar,userAvatar,setCurrentSection,currentSection,burgerClick,setburgerClick,gcmembers,schedule,setschedule,driverSched
     }
     return (
         <UserContext.Provider value={value}>

@@ -9,9 +9,10 @@ import panelIcon from '../Icons/settings.svg'
 import homeIcon from '../Icons/home.svg'
 export default function Nav(props) {
     const {isTabletDevice,isLaptop,isMobile,isDesktop,isBigScreen} = useResponsive()
-    const list={auth:[{linkName:"HOME",pathName:"/user"},{linkName:"GROUPCHATS",pathName:"/groupchats"}],notAuth:[{linkName:"ABOUT US",pathName:"/aboutus"},{linkName:"HOW TO SIGNUP?",pathName:"/howtosignup"},{linkName:"SIGNIN",pathName:"/signin"}]}
-    const onCPLhover = [{linkName:"Dashboard",pathName:"/controlpanel/dashboard"},{linkName:"Membership",pathName:"/controlpanel/membership"},{linkName:"Admin",pathName:"/controlpanel/admin"}]
+    const list={auth:[{linkName:"HOME",pathName:"/user"},{linkName:"GROUPCHATS",pathName:"/groupchats"},{linkName:"ACCOUNT",pathName:"/account"}],notAuth:[{linkName:"ABOUT US",pathName:"/aboutus"},{linkName:"HOW TO SIGNUP?",pathName:"/howtosignup"},{linkName:"SIGNIN",pathName:"/signin"}]}
+    
     const {user,burgerClick,details,setburgerClick} = useAuth();
+    const onCPLhover = [{linkName:"Dashboard",pathName:"/controlpanel/dashboard"},{linkName:"Membership",pathName:"/controlpanel/membership"},details[0]?.userroleid===1?{linkName:"BOD",pathName:"/controlpanel/bod"}:{linkName:"Admin",pathName:"/controlpanel/admin"}]
     const authStyle = {left:burgerClick?"0%":"-100%",flexDirection: "row",width: "100%",height: "7vh",top: "93%",columnGap:"20%" }
     const [isHover, setisHover] = useState(false)
     const renderLink = (list)=>{
@@ -59,18 +60,13 @@ export default function Nav(props) {
             <div id="nav_cont">
                 <img/>
                 {user?renderLink(list.auth):renderLink(list.notAuth)}
-                {user?<a onPointerEnter={()=>{
+                {user&&details[0]?.userroleid!==3?<a onPointerEnter={()=>{
                     setisHover(true)
                 }}
-                onPointerOut={()=>{
-                    setisHover(false)
-                }}
-                style={{height:isHover?"20vh":"",backgroundColor:"white"}}
+                style={{height:isHover?"20vh":""}}
                 >CONTROL PANEL
-                    <div id="others"onPointerEnter={()=>{
-                    setisHover(true)
-                    }} >
-                        {isHover?renderLink(onCPLhover):<></>}
+                    <div id="others" onPointerEnter={()=>{setisHover(true)}} onPointerLeave={()=>{setisHover(false)}} style={{display:isHover?"flex":"none"}}>
+                        {renderLink(onCPLhover)}
                     </div>
                 </a>:<></>}
                 
