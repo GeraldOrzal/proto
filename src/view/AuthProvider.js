@@ -72,6 +72,11 @@ export default function AuthProvider({children}) {
         }).on('UPDATE',payload=>{
             GetAllSchedules(setschedule)
         }).subscribe()
+        const sub2 = supabase.from('scheduleaccepted').on('INSERT', payload => {
+            setdriverSched(prev=>[...prev,payload.new])
+        }).on('UPDATE',payload=>{
+            setdriverSched(prev=>[...prev,payload.new])
+        }).subscribe()
         
         groupChatServices.GetDefaultAvatars("defaultavatars","groupphoto",setGcAvatar);
         groupChatServices.GetDefaultAvatars("defaultavatars","useravatars",setUserAvatar);
@@ -88,6 +93,7 @@ export default function AuthProvider({children}) {
        
         return ()=>{
             sub?.unsubscribe()
+            sub2?.unsubscribe()
             listener?.unsubscribe();
         }
     }, [])

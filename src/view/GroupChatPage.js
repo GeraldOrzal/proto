@@ -253,6 +253,7 @@ export default function GroupChatPage() {
     const renderMessages = (list) =>(    
     list?.map((x)=>x.messagetype_id===1?<div className="files" onClick={()=>{
         groupChatServices.Download("files",x.messsagebody.substring(6,x.messsagebody.length))
+        console.log(x.messsagebody.substring(6,x.messsagebody.length))
     }} >
         {details[0]?.userdetails_id === x.userdetails_id?
         <div >

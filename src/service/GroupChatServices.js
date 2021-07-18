@@ -117,9 +117,12 @@ class GroupChatServices {
         }
         
     }
-    Download(bucket,path){
-        const a = supabase.storage.from(bucket).download(path)
-        console.log(a)
+     Download(bucket,path){
+        this.GetFileViaKey(bucket,path,(s)=>{
+            let r = document.createElement("a")
+            r.href = s.publicURL
+            r.click()
+        })
     }
     async InsertResponse(){
         const { data, error } = await supabase.from('scheduleaccepted').insert([{ some_column: 'someValue', other_column: 'otherValue' }])
