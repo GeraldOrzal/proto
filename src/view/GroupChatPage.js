@@ -396,13 +396,15 @@ export default function GroupChatPage() {
                     </ul>:<></>}
                 
                 </div>
-            <Calendar value={new Date()} tileContent={
+            <Calendar defaultValue={new Date()} calendarType="US" tileContent={
                 
                ({ date, view }) => {
+                   
+                   
                    return schedule.map((s)=>{
-                        
-                        if(s.assign_at==currentGC?.gclist_id&&s.start_at===date.toISOString().split("T")[0]){
-
+                        let a = new Date(s.start_at)
+                        if(s.assign_at==currentGC?.gclist_id&&new Date(a.getFullYear(),a.getMonth(),a.getDate()).toISOString().split("T")[0]==date.toISOString().split("T")[0]){
+                            
                             return <div className="sched_ann" key={s.schedule_id} onClick={()=>{
                                 setclickSched(s)
                             }}>
@@ -414,7 +416,7 @@ export default function GroupChatPage() {
                        
                    )
                }
-            } 
+            } onClickDay={(s)=>{console.log(s)}} 
            />
         </div>:<>
             <div id="chatcont" style={{width:isMobile?"100vw":"50vw",borderRight:isMobile?"none":"solid black 2px"}}>

@@ -124,8 +124,12 @@ class GroupChatServices {
             r.click()
         })
     }
-    async InsertResponse(){
-        const { data, error } = await supabase.from('scheduleaccepted').insert([{ some_column: 'someValue', other_column: 'otherValue' }])
+    async UpdateResponse(sched,cb){
+        const { data, error } = await supabase.from('scheduleaccepted').update([{ attended_at: new Date().toISOString().split("T")[0], time_attended: new Date().getHours()+":"+new Date().getMinutes()}]).match({scheduleaccepted_id:sched})
+        if(error){
+            return
+        }
+        cb(sched)
     }
 
     AcceptSched(schedule_id,currentCount,details){
@@ -140,6 +144,14 @@ class GroupChatServices {
                 return
             }   
         },"SUB")      
+    }
+    RemoveSched(schedule_id,currentCount){
+        this.UpdateSchedulePeople(currentCount,schedule_id,async ()=> {
+            const { data, error } = await supabase.from('scheduleaccepted').update([{remarks_id:1 }]).match({schedule_id:schedule_id})
+            if(error){
+                return
+            }   
+        },"ADD")      
     }
     
     async GetCurrentGC(id,cb){

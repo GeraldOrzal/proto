@@ -17,7 +17,7 @@ import Responsive,{useResponsive} from './view/Components/Responsive';
 import Admin from './view/Admin'
 import BOD from './view/BOD'
 import {AnimatePresence} from 'framer-motion'
-
+import AttendanceNotif from './view/Components/AttendanceNotif'
 const controlPanelPath = "controlpanel";
 function App() {
   
@@ -25,7 +25,9 @@ function App() {
       <Router>
           <AuthProvider>
             <Responsive>
+                <AttendanceNotif/>
                 <Nav/>
+                
                 <Switch>
                 <AnimatePresence>
                       <Route exact path="/" component={LandingPage} key={1}/>
