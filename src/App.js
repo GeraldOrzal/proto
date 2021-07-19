@@ -19,6 +19,7 @@ import BOD from './view/BOD'
 import {AnimatePresence} from 'framer-motion'
 import AttendanceNotif from './view/Components/AttendanceNotif'
 import Account from './view/Account';
+import AccountVerified from './view/AccountVerified';
 const controlPanelPath = "controlpanel";
 function App() {
   
@@ -28,7 +29,6 @@ function App() {
             <Responsive>
                 <AttendanceNotif/>
                 <Nav/>
-                
                 <Switch>
                 <AnimatePresence>
                       <Route exact path="/" component={LandingPage} key={1}/>
@@ -41,8 +41,8 @@ function App() {
                       <PrivateRoute exact path={"/"+controlPanelPath+"/bod"} component ={BOD} key={8}/>
                       <PrivateRoute exact path="/account" component={Account}/>
                       <Route path="/signin" component={SigninPage} key={9}/>
-                      
                       <Route path="/signup" component={SignupPage} key={10}/>
+                      <Route path="/accountverified" component={AccountVerified} key={11}/>
                   </AnimatePresence>
                   
                 </Switch>
