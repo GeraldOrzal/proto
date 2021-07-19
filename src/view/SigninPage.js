@@ -32,13 +32,13 @@ export default function SigninPage() {
         user?<Redirect to={"/user"}/>:
         <div className="base signinpage">
             <form onSubmit={HandleSubmit} className={isMobile?"_form":"desk-form"}>
-                <label>SIGNIN</label>
+                <h1><center>SIGN IN</center></h1>
                 <label>{errorMessage}</label>
                 <label>Email:</label>
                 <input type="email"/>
                 <label>Password:</label>
                 <input type="password"/>
-                <button disabled={isLoading}>Signin</button>
+                <button disabled={isLoading}>Sign In</button>
                 <Link to="/signup">DONT HAVE AN ACCOUNT YET? CLICK ME</Link>
             </form>
             

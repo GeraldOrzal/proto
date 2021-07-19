@@ -131,7 +131,7 @@ export default function GroupChatPage() {
         
         }
         
-        
+        textArea.current.value=""
         
     }
     function SetCurrentSection(x){   

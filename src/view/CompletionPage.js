@@ -129,11 +129,11 @@ export default function CompletionPage() {
                     x.currentTarget.style.border="solid red 2px"
                 }
             }}/>
-            <label>FIRSTNAME</label>
+            <label>FIRST NAME</label>
             <input type="text"/>
-            <label>LASTNAME</label>
+            <label>LAST NAME</label>
             <input type="text"/>
-            <label>MIDDLENAME</label>
+            <label>MIDDLE NAME</label>
             <input type="text"/>
             <label>DATE OF BIRTH</label>
             <input type="date"/>
@@ -166,7 +166,7 @@ export default function CompletionPage() {
             <input type="text"/>
             <label>Plate Number</label>
             <input type="text"/>
-            <label>Franchisenumber case number (if any)</label>
+            <label>Franchise Number Case Number (if any)</label>
             <input type="text"/>
             <label>Expiration Date</label>
             <input type="date"/>

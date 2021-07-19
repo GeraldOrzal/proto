@@ -1,12 +1,22 @@
 #nav_cont{
     padding: 2%;
     background-image: radial-gradient(at bottom center,#53565A,#4B443C);
+    display: flex;
+    flex-direction: row;
+    
 }
 #nav_cont > a {
-    margin-left: 2%;
+    margin-left: 0%;
     text-decoration: none;
     color: #E4E5E8;
     font-weight: bolder;
+    padding: 15px;
+    transition: 0.5s;
+}
+
+#nav_cont > a:hover {
+    transition: 0.5s;
+    color: #6278b8;
 }
 
 .active{
@@ -14,8 +24,7 @@
 }
 #nav_cont img{
     width: 20vw;
-    height: 5vh;
-    border: solid black 2px;
+    height: 10vh;
     margin-right: 40vw;
 }
 

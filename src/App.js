@@ -18,6 +18,7 @@ import Admin from './view/Admin'
 import BOD from './view/BOD'
 import {AnimatePresence} from 'framer-motion'
 import AttendanceNotif from './view/Components/AttendanceNotif'
+import Account from './view/Account';
 const controlPanelPath = "controlpanel";
 function App() {
   
@@ -38,7 +39,9 @@ function App() {
                       <PrivateRoute exact path={"/"+controlPanelPath+"/membership"} component ={Membership} key={6}/>
                       <PrivateRoute exact path={"/"+controlPanelPath+"/admin"} component ={Admin} key={7}/>
                       <PrivateRoute exact path={"/"+controlPanelPath+"/bod"} component ={BOD} key={8}/>
+                      <PrivateRoute exact path="/account" component={Account}/>
                       <Route path="/signin" component={SigninPage} key={9}/>
+                      
                       <Route path="/signup" component={SignupPage} key={10}/>
                   </AnimatePresence>
                   

@@ -1,1 +1,113 @@
+#signout_btn{
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    background: #1E90FF;
+    width: 130px;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,,0.1);
+      -webkit-transition-duration: 0.3s;
+      transition-duration: 0.3s;
+      -webkit-transition-property: box-shadow, transform;
+      transition-property: box-shadow, transform;
+}
+#signout_btn:hover, #signout_btn:focus, #signout_btn:active{
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+.head h1{
+    margin-top: 0;
     
+
+
+}
+.head {
+    background-color: blanchedalmond;
+    text-align: center;
+    font-family: monospace;
+    border: 10px solid rgb(126, 123, 123);
+    margin-right: 500px;
+    margin-left: 500px;
+    padding: 10px;
+}
+
+
+#slider{
+    overflow: hidden;
+}
+#slider figure {
+    position: relative;
+    width: 500%;
+    margin: 0;
+    left: 0;
+    animation: 20s slider infinite;
+}
+#slider figure img {
+    width: 20%;
+    float: left;
+}
+@keyframes slider{
+    0% {
+        left: 0;
+    }
+    20% {
+        left: 0;
+    }
+    25% {
+        left: -100%;
+    }
+    45% {
+        left: -100%;
+    }
+    50% {
+        left: -200%;
+    }
+    70% {
+        left: -200%;
+    }
+    75% {
+        left: -300%;
+    }
+    95% {
+        left: -300%;
+    }
+    100% {
+        left: -400%;
+    }
+}
+.mission{
+    text-align: center;
+    font-family: 'Myriad Pro';
+    border: 5px solid blue;
+    margin-left: 40%;
+    margin-right: 40%;
+    margin-top: 5%;
+}
+.mis-desc{
+    text-align: center;
+    font-family: 'Courier New';
+}
+.vision{
+    text-align: center;
+    font-family: 'Myriad Pro';
+    border: 5px solid red;
+    margin-right: 40%;
+    margin-left: 40%;
+
+}
+.vis-desc{
+    text-align: center;
+    font-family: 'Courier New';
+}
+.desc {
+   text-align: center;
+   font-family: 'Myriad Pro';
+
+}

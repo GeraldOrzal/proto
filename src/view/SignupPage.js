@@ -33,7 +33,7 @@ export default function SignupPage() {
                 <input type="email"/>
                 <label>PASSWORD:</label>
                 <input type="password"/>
-                <button disabled={isLoading}>SIGNUP</button>
+                <button disabled={isLoading}>Sign Up</button>
             </form>
         </div>
     )

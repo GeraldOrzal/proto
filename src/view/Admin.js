@@ -13,7 +13,7 @@ export default function Admin() {
         let temp = {
             notassigned:[]
         }
-        schedule.map((y)=>{
+        schedule?.map((y)=>{
             if(y.assign_at===null){
                 temp.notassigned.push(y)
                 return
@@ -134,21 +134,26 @@ export default function Admin() {
     }
     return (
         details[0].userroleid!==2&&!isLoading?<Redirect to="/user"/>:
-        <div id="adminpage">
+        <div id="adminpage" className="base">
             <DragDropContext onDragEnd={Drop} >
+            <div id="schedHolder">
+                <h2>SCHEDULES</h2>
                 <Droppable droppableId="schedule" type="SCHED">
                     {(provided,q)=>
                         <div id="availsched" ref={provided.innerRef}     {...provided.droppableProps}>
                                 {RenderSched()}
                                 {provided.placeholder}
                         </div>
-                        
                     }
                     
-                </Droppable>                    
-                <div id="gcslots">
-                    {RenderSlots()}
-                </div>    
+                </Droppable>      
+            </div>
+                    <div id="groupHolder">
+                        <h1>GROUP CHATS</h1>
+                        <div id="gcslots">
+                            {RenderSlots()}
+                        </div>    
+                    </div>
             
             </DragDropContext>
             

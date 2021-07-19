@@ -7,9 +7,10 @@ import {desktop,mobile} from './_responsive'
 import grpIcon from '../Icons/group.svg'
 import panelIcon from '../Icons/settings.svg'
 import homeIcon from '../Icons/home.svg'
+import logo from '../pics/LTSC LOGO.png'
 export default function Nav(props) {
     const {isTabletDevice,isLaptop,isMobile,isDesktop,isBigScreen} = useResponsive()
-    const list={auth:[{linkName:"HOME",pathName:"/user"},{linkName:"GROUPCHATS",pathName:"/groupchats"},{linkName:"ACCOUNT",pathName:"/account"}],notAuth:[{linkName:"ABOUT US",pathName:"/aboutus"},{linkName:"HOW TO SIGNUP?",pathName:"/howtosignup"},{linkName:"SIGNIN",pathName:"/signin"}]}
+    const list={auth:[{linkName:"HOME",pathName:"/user"},{linkName:"GROUPCHATS",pathName:"/groupchats"},{linkName:"ACCOUNT",pathName:"/account"}],notAuth:[{linkName:"ABOUT US",pathName:"/aboutus"},{linkName:"HOW TO SIGNUP?",pathName:"/howtosignup"},{linkName:"SIGN IN",pathName:"/signin"}]}
     
     const {user,burgerClick,details,setburgerClick} = useAuth();
     const onCPLhover = [{linkName:"Dashboard",pathName:"/controlpanel/dashboard"},{linkName:"Membership",pathName:"/controlpanel/membership"},user&&details[0]?.userroleid===1?{linkName:"BOD",pathName:"/controlpanel/bod"}:{linkName:"Admin",pathName:"/controlpanel/admin"}]
@@ -58,7 +59,7 @@ export default function Nav(props) {
     return (<>
                 {isBigScreen||isDesktop||isLaptop?
             <div id="nav_cont">
-                <img/>
+                <img src={logo}/>
                 {user?renderLink(list.auth):renderLink(list.notAuth)}
                 {user&&details[0]?.userroleid!==3?<a onPointerEnter={()=>{
                     setisHover(true)
